@@ -11,24 +11,34 @@ import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.Tag;
 import cs213.photoAlbum.model.User;
 
-/**The Client class provides an interface to the user to perform user functions. Acts as an intermediary between the user 
- * and the backend interface, ensuring validity of pass  */
+/**
+ * The Client class provides an interface to the user to perform user functions. 
+ * Acts as an intermediary between the user and the backend interface, ensuring validity of pass  
+ */
 public class Client implements IClient
 {
 
+	/**IBackend object declaration*/
 	private IBackend backendInterface;
 
+	/**Command mode, set to integer 0*/
 	private static final int COMMAND = 0;
+	
+	/**Interactive mode, set to integer 1*/
 	private static final int INTERACTIVE = 1;
 
+	/**Initializes mode to 0, command mode*/
 	@SuppressWarnings("unused")
 	private int mode = 0;
 
+	/**Id of current user*/
 	private String id;
 
 	/**
-	 * Constructs a client object that makes calls to the backend using the passed object, which implements the backend interface.
-	 * @param backendInterface
+	 * Constructs a client object that makes calls to the backend using the passed object,
+	 * which implements the backend interface.
+	 * 
+	 * @param backendInterface IBackend object
 	 */
 	public Client(IBackend backendInterface) {
 		this.backendInterface = backendInterface;
@@ -38,9 +48,10 @@ public class Client implements IClient
 
 	/**
 	 * Creates a new user and adds to the backend database. Passed ID should be unique.
-	 * @param id - unique id of new user
-	 * @param name - name of user. Need not be unique.
-	 * @return true if and only if id is unique among all users.
+	 * 
+	 * @param id Unique id of new user
+	 * @param name Name of user. Need not be unique.
+	 * @return True if and only if id is unique among all users.
 	 */
 	public boolean addUser(String id, String name) {
 
@@ -48,9 +59,10 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Delete a user from the backend database, identified by their unique id.
-	 * @param id - unique ID of user caller wants to delete
-	 * @return true if and only if passed ID belongs to a user in backend database
+	 * Deletes a user from the backend database, identified by their unique id.
+	 * 
+	 * @param id Unique ID of user caller wants to delete
+	 * @return True if and only if passed ID belongs to a user in backend database
 	 */
 	public boolean deleteUser(String id) {
 
@@ -58,6 +70,7 @@ public class Client implements IClient
 	}
 
 	/**
+	 * Gets ArrayList of currently stored users
 	 * 
 	 * @return ArrayList<User> of currently stored users.
 	 */
@@ -67,7 +80,7 @@ public class Client implements IClient
 
 	}
 
-
+	/** */
 	private void setMode(int mode) {
 		this.mode = mode;
 	}
@@ -76,12 +89,13 @@ public class Client implements IClient
 	/**
 	 * Login as a user and switch to interactive mode in command view. 
 	 * 
-	 *  @param String id of the user the caller wants to log in as
-	 *  @return true if and only if passed id belongs to a user stored in backend
+	 *  @param id User Id the caller wants to log in as
+	 *  @return True if and only if passed id belongs to a user stored in backend
 	 */
 	public boolean login(String id) {
 
-		if (!backendInterface.userExists(id)) return false;
+		if (!backendInterface.userExists(id)) 
+			return false;
 
 		setMode(INTERACTIVE);
 		this.id = id;
@@ -89,7 +103,7 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Write user data to disk upon quit. 
+	 * Writes user data to disk upon quit. 
 	 */
 	public void writeUsers() {
 		try {
@@ -100,9 +114,11 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Create album for currently logged in user. Passed album name must be unique among current user's album names.
-	 * @param name of album to be added
-	 * @return true if and only if name parameter is unique to user album names. 
+	 * Creates album for currently logged in user. 
+	 * Passed album name must be unique among current user's album names.
+	 * 
+	 * @param name Album name to be added
+	 * @return True if and only if name parameter is unique to user album names. 
 	 */
 	public boolean createAlbum(String name) {
 
@@ -113,9 +129,10 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Delete album for currently logged in user. Passed album name must exist in user album collection.
-	 * @param name of album to be deleted
-	 * @return true if and only if passed album name is the name of an existing album in user's collection
+	 * Deletes album for currently logged in user. Passed album name must exist in user album collection.
+	 * 
+	 * @param name Album name to be deleted
+	 * @return True if and only if passed album name is the name of an existing album in user's collection
 	 */
 	public boolean deleteAlbum(String name) {
 
@@ -126,6 +143,7 @@ public class Client implements IClient
 	}
 
 	/**
+	 * Returns list of albums of user currently logged in
 	 * 
 	 * @return ArrayList<Album> of albums for currently logged in user.
 	 */
@@ -137,6 +155,7 @@ public class Client implements IClient
 	}
 
 	/**
+	 * Returns Id of currently logged in user
 	 * 
 	 * @return String id of currently logged in user
 	 */
@@ -147,8 +166,9 @@ public class Client implements IClient
 
 	/**
 	 * Returns an ArrayList<Photo> of all photos stored in passed album name.
-	 * @param albumname - must exist in user's album collection
-	 * @return ArrayList<Photo> of photo objects stored in albumname. Null if albumname does not exist
+	 * 
+	 * @param albumname Name of album that must exist in user's album collection
+	 * @return ArrayList<Photo> of photo objects stored in albumname, null if albumname does not exist
 	 */
 	public ArrayList<Photo> listPhotos(String albumname) {
 
@@ -169,10 +189,11 @@ public class Client implements IClient
 	 * Adds a photo to an album. Passed filename must be the name of an existing file on disk, need not be a photo file. Caption will
 	 * be associated with photo, unless filename has already been added to an album in this user's collection, in which case the previous
 	 * caption will be retained. AlbumName is name of album to which the photo is being added.
-	 * @param filename - of an existing file on disk
-	 * @param caption - caption to be associated with file, only if photo is being added for first time.
-	 * @param albumName - of an existing album, that does not already contain photo associated with filename.
-	 * @return true if and only if filename is an existing file, albumName exists, and albumName does not already contain filename
+	 * 
+	 * @param filename Name of an existing file on disk
+	 * @param caption  The caption to be associated with file, only if photo is being added for first time.
+	 * @param albumName Album name of an existing album, that does not already contain photo associated with filename.
+	 * @return True if and only if filename is an existing file, albumName exists, and albumName does not already contain filename
 	 */
 	public boolean addPhoto(String filename, String caption, String albumName) {
 
@@ -180,13 +201,9 @@ public class Client implements IClient
 		Album album = null;
 		File file = new File(filename);
 		Photo photo = null;
+		String canonicalPath = "";
 
-		if (!file.exists()) {
-			System.out.println("File " + filename + " does not exist.");
-			return false;
-		}
-
-		if ((album = user.getAlbum(albumName)) == null) {
+		if ((album = user.getAlbum(albumName)) == null || !file.exists()) {
 
 			System.out.println("Album " + albumName + " does not exist.");
 			return false;
@@ -200,11 +217,19 @@ public class Client implements IClient
 
 		if (!user.hasPhoto(filename)) {
 
-			photo = new Photo(filename, caption);
+			
+			try {
+				canonicalPath = file.getCanonicalPath();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			photo = new Photo(canonicalPath, caption);
+			
 			user.addPhoto(photo);
 		} else {
 
-			photo = user.getPhoto(filename);
+			photo = user.getPhoto(canonicalPath);
 		}
 
 		photo.addtoAlbum(albumName);
@@ -213,6 +238,7 @@ public class Client implements IClient
 	}
 
 	/**
+	 * Returns User object of currently logged in user
 	 * 
 	 * @return User object corresponding to currently logged in user
 	 */
@@ -221,11 +247,13 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Moves photo associated with filename from oldAlbumName to newAlbumName. Checks validity of input arguments and passes to user method.
-	 * @param filename - must exist in oldAlbumname
-	 * @param oldAlbumName - must exist in user collection and contain photo associated with filename
-	 * @param newAlbumName - must exist in user collection and not already contain photo associated with filename
-	 * @return true if and only if both oldAlbumName and newAlbumName exist, oldAlbumName contains filename, and newAlbumName does not contain filename
+	 * Moves photo associated with filename from oldAlbumName to newAlbumName. 
+	 * Checks validity of input arguments and passes to user method.
+	 * 
+	 * @param filename Name of file that must exist in oldAlbumname
+	 * @param oldAlbumName Album's old name that must exist in user collection and contain photo associated with filename
+	 * @param newAlbumName Album's new name that must exist in user collection and not already contain photo associated with filename
+	 * @return True if and only if both oldAlbumName and newAlbumName exist, oldAlbumName contains filename, and newAlbumName does not contain filename
 	 */
 	public boolean movePhoto(String filename, String oldAlbumName, String newAlbumName) {
 
@@ -254,10 +282,11 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Remove photo from album.
-	 * @param filename - must exist in albumName
-	 * @param albumName - must exist in user album collection
-	 * @return true if and only if albumName exists, and filename exists in albumName
+	 * Removes photo from album
+	 * 
+	 * @param filename Name of file that must exist in albumName
+	 * @param albumName Album name that must exist in user album collection
+	 * @return True if and only if albumName exists, and filename exists in albumName
 	 */
 	public boolean removePhoto(String filename, String albumName) {
 
@@ -290,11 +319,13 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Add tag to a photo. If photo associated with filename is present in multiple albums, tag will added to all references of filename
-	 * @param filename - must exist somewhere in users collection.
-	 * @param tagType - must be 0, 1, or 2
-	 * @param tagValue - value of tag
-	 * @return true if and only if tagType is of existing type and filename exists in user collection
+	 * Adds tag to a photo. If photo associated with filename is present in multiple albums, 
+	 * tag will added to all references of filename
+	 * 
+	 * @param filename Name of file that must exist somewhere in users collection.
+	 * @param tagType Type of tag that must be 0, 1, or 2
+	 * @param tagValue Value of tag
+	 * @return True if and only if tagType is of existing type and filename exists in user collection
 	 */
 	public boolean addTag(String filename, String tagType, String tagValue) {
 
@@ -339,11 +370,13 @@ public class Client implements IClient
 	}
 
 	/**
-	 * Delete a tag from a photo. If photo associated with filename is present in multiple albums, tag will be deleted from all references of filename
-	 * @param filename - must exist in user collection
-	 * @param tagType - tag type of tag wanted for deletion. Must be 0, 1, or 2
-	 * @param tagValue - value of tag wanted for deletion.
-	 * @return true if and only if filename exists, and tag identified by tagType and tagValue exists for filename.
+	 * Deletes a tag from a photo. If photo associated with filename is present in multiple albums, 
+	 * tag will be deleted from all references of filename
+	 * 
+	 * @param filename Name of file that must exist in user collection
+	 * @param tagType Tag type of tag wanted for deletion. Must be 0, 1, or 2
+	 * @param tagValue Value of tag wanted for deletion.
+	 * @return True if and only if filename exists, and tag identified by tagType and tagValue exists for filename.
 	 */
 	public boolean deleteTag(String filename, String tagType, String tagValue) {
 
@@ -389,8 +422,9 @@ public class Client implements IClient
 
 
 	/**
-	 * Get photo object associated with filename.
-	 * @param filename - must exist in user collection
+	 * Gets photo object associated with filename.
+	 * 
+	 * @param filename Name of file that must exist in user collection
 	 * @return Photo object associated with filename. Null if filename does not exist.
 	 */
 	public Photo getPhoto(String filename) {
@@ -399,8 +433,9 @@ public class Client implements IClient
 
 	/**
 	 * Returns ArrayList<Photo> of all photos after start date and before end date.
-	 * @param startDate - begin date range
-	 * @param endDate - end date range.
+	 * 
+	 * @param startDate Begin date range
+	 * @param endDate End date range.
 	 * @return ArrayList<Photo> of all photos within specified range.
 	 */
 	public ArrayList<Photo> getPhotosbyDate(Date startDate, Date endDate) {
@@ -419,7 +454,9 @@ public class Client implements IClient
 	}
 	
 	/**
+	 * Returns Arraylist<Photo> of all photos by tag indicated by tokens
 	 * 
+	 * @param tokens Contains the tag type of photos 
 	 * @return ArrayList<Photo> of all photo objects having all tags indicated in tokens
 	 */
 	public ArrayList<Photo> getPhotosByTag(ArrayList<String> tokens) {

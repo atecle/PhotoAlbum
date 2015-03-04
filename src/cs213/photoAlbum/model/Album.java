@@ -5,21 +5,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+
+/**
+ * This class encapsulates an Album object and methods needed for altering attributes of this Album.
+ * Implements Serializable, converting an instance Album object into a sequence of bytes.
+ *
+ */
 public class Album implements Serializable {
 
-	
+	/**Universal version identifier for a Serializable class.*/
 	private static final long serialVersionUID = 1L;
 
-	/** A unique album name per user **/
+	/** A unique album name per user */
 	private String name;
 	
+	/**Start date of an album */
 	private Date start;
 	
+	/**End date of an album */
 	private Date end;
 	
-	/** Hashmap storing photos in this album, keyed by unique filename **/
+	/** Hashmap storing photos in this album, keyed by unique filename */
 	private HashMap<String, Photo> photos;
 	
+	/** 
+	 * Constructs an Album with the album's name
+	 * 
+	 * @param name Album's name
+	 */
 	public Album(String name) {
 		this.name = name;
 		photos = new HashMap<String, Photo>();
@@ -27,7 +40,8 @@ public class Album implements Serializable {
 	
 	/** 
 	 * Adds a photo to the album
-	 * @oaram	photo Passes in a Photo object
+	 * 
+	 * @param photo Passed in photo object
 	 */
 	public void addPhoto(Photo photo) {
 		
@@ -38,8 +52,8 @@ public class Album implements Serializable {
     /**
      * Returns the name of the photo
      * 
-     * @param name  String name is set to the name variable passed in
-     * @return The name of the photo is returned
+     * @param filename String name is set to the name variable passed in
+     * @return Name of the photo
      */
 	public Photo getPhoto(String filename) 
 	{
@@ -50,26 +64,34 @@ public class Album implements Serializable {
 	
 	/**
 	 * Returns the name of the album
-	 * @return name
+	 * 
+	 * @return Name of the album
 	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Sets the name of the album 
+	 * 
+	 * @param name Set name of the album
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	/**
 	 * Returns how many photos are in an album 
-	 * @return count
+	 * 
+	 * @return Size of the album
 	 */
 	public int getSize() {
 		return photos.size();
 	}
 		
 	/**
-	 * Returns the list of photos in the album
-	 * @return photos	
+	 * Returns list of photos in the album
+	 * 
+	 * @return ArrayList of photos
 	 */
 	public ArrayList<Photo> getPhotos() {
 		return new ArrayList<Photo>(photos.values());
@@ -77,16 +99,25 @@ public class Album implements Serializable {
 	
 	/**
 	 * Deletes a photo from an album.
-	 * @param name	The String of the name passed in
+	 * 
+	 * @param filename String of the name passed in
+	 * @return True if filename removed, false otherwise
 	 */
 	public boolean deletePhoto(String filename) {
 		
-		if (!photos.containsKey(filename)) return false;
+		if (!photos.containsKey(filename)) 
+			return false;
 		
 		photos.remove(filename);
-		return true;
+			return true;
 	}
 	
+	/**
+	 * Sets the start date and end date for album.
+	 * 
+	 * @param date Album's start and end date
+	 * @return  If start and end dates are null, the start and end are set to the date passed in. 
+	 */
 	private void setStartandEnd(Date date) {
 		
 		if (start == null && end == null) {
@@ -95,13 +126,16 @@ public class Album implements Serializable {
 			return;
 		}
 		
-		if (date.before(start)) start = date;
-		if (date.after(end)) end = date;
+		if (date.before(start)) 
+			start = date;
+		if (date.after(end)) 
+			end = date;
 	}
 	
 	
 	/**
-	 * Get date of earliest photo in this album
+	 * Gets the date of earliest photo in this album
+	 * 
 	 * @return Date of earliest photo
 	 */
 	public Date getStartDate() {
@@ -109,7 +143,8 @@ public class Album implements Serializable {
 	}
 	
 	/**
-	 * Get Date of latest photo in this album
+	 * Gets date of latest photo in this album
+	 * 
 	 * @return Date of latest photo.
 	 */
 	public Date getEndDate() {
@@ -117,9 +152,10 @@ public class Album implements Serializable {
 	}
 	
 	/**
+	 * Checks if photo is contained in album
 	 * 
-	 * @param filename
-	 * @return true if album contains photo.
+	 * @param filename Name of album being checked
+	 * @return True if album contains photo.
 	 */
 	public boolean containsPhoto(String filename) {
 		

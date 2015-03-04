@@ -7,12 +7,20 @@ import java.util.Comparator;
 import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.Tag;
 
+/**
+ * 
+ * Class Sorter is used for organization of lists of both tags and photos. It contains method 
+ * sortTags and sortPhotos, which sorts an ArrayList of tags by type and an ArrayList of photos by dates. 
+ *
+ */
 public class Sorter {
 
 	/**
-	 * Sorts list of tags. Location tags first, person tags next, and keyword tags last. Tags of same type sorted alphabetically by tag value.
-	 * @param tags
-	 * @return Sorted list of tags
+	 * Sorts list of tags. Location tags first, person tags next, and keyword tags last. 
+	 * Tags of same type sorted alphabetically by tag value.
+	 * 
+	 * @param tags Unsorted ArrayList of tag objects
+	 * @return Sorted list of tags objects
 	 */
 	public static ArrayList<Tag> sortTags(ArrayList<Tag> tags) {
 
@@ -69,7 +77,8 @@ public class Sorter {
 	
 	/**
 	 * Sorts list of photos by date
-	 * @param photos
+	 * 
+	 * @param photos Unsorted ArrayList of photo objects
 	 * @return chronologically sorted list of photo objects
 	 */
 	public static ArrayList<Photo> sortDates(ArrayList<Photo> photos) {

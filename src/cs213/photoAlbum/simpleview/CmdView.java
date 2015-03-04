@@ -1,5 +1,5 @@
 /**
- * @author Jennifer Delaosa
+ * @author Jennifer DeLaOsa
  * @author Adam Tecle
  */
 
@@ -24,11 +24,24 @@ import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.Tag;
 import cs213.photoAlbum.model.User;
 
+/**
+ * 
+ * Class CmdView contains the location of the initial calls and will respond to command line arguments
+ * submitted by the user. Initially, a simple command line mode in activated. Once the user
+ * is logged in, a more extensive interactive mode is then activated. 
+ *
+ */
 public class CmdView 
 {
 
+	/** Client object declaration*/
 	private static Client client;
 
+	/**
+	 * Main method of the program which will process the arguments inputed in the command line
+	 * 
+	 * @params args	Argument inputed by the user
+	 */
 	public static void main(String[] args) {
 
 		client = new Client(new Backend());
@@ -44,7 +57,9 @@ public class CmdView
 
 	}
 
-	/** User can enter: delete user <tag> <name>, list user, add user <tag> <name>**/
+	/** 
+	 * User can enter: delete user <tag> <name>, list user, add user <tag> <name>
+	 */
 	private static void parseInput(String input, Scanner sc) 
 	{
 		//int userId = 0;
@@ -457,6 +472,12 @@ public class CmdView
 
 	}
 
+	/**
+	 * Formats the date correctly
+	 * 
+	 * @param date The date to be formatted
+	 * @return Formatted date
+	 */
 	private static String formatDate(Date date) {
 		DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy-HH:mm:ss");
 		return outputFormat.format(date);
@@ -482,6 +503,12 @@ public class CmdView
 		return matchList;
 	}
 
+	/**
+	 * Checks the format of the Date for correctness
+	 * 
+	 * @param date The date which will be format checked
+	 * @return returns date if correctly formatted, null otherwise.
+	 */
 	private static Date checkDateFormat(String date) {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy-HH:mm:ss");

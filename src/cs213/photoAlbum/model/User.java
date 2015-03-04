@@ -1,35 +1,40 @@
 package cs213.photoAlbum.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cs213.photoAlbum.util.Helper;
+
 /**
  * Class User contains the information relating to a single user. 
  * The class contains the methods for adding, deleting and renaming an album. 
+ * Implements Serializable, converting an instance Tag object into a sequence of bytes.
  */
 public class User implements Serializable {
 
-
+	/**Universal version identifier for a Serializable class.*/
 	private static final long serialVersionUID = 1L;
 
-	/** A unique ID used to log in **/
+	/** Unique ID used to log in */
 	private String id;
 	
-	/** User's full name **/
+	/** User's full name */
 	private String name;
 	
 	/** HashMap of User's albums, keyed by unique album name. Stores album objects, which store references to 
-	 * the photos in the photo HashMap **/
+	 * the photos in the photo HashMap */
 	private HashMap<String, Album> albums;
 	
-	/** HashMap of Photo objects, keyed by unique file name **/
+	/** HashMap of Photo objects, keyed by unique file name */
 	private HashMap<String, Photo> photos;
 	
 	/**
 	 * Instantiates a new User object with a name and a unique id
-	 * @param String id of new user
-	 * @param String name of new user
+	 * 
+	 * @param id User's Id
+	 * @param name User's name
 	 */
 	public User(String id, String name) {
 		this.id = id;
@@ -40,8 +45,9 @@ public class User implements Serializable {
 	
 	/**
 	 * Adds a new album 
-	 * @param String name of album
-	 * @return boolean value indicating success or failure
+	 * 
+	 * @param name Album name
+	 * @return Boolean value indicating success or failure
 	 */
 	public boolean addAlbum(String name) 
 	{
@@ -57,8 +63,9 @@ public class User implements Serializable {
 	
 	/**
 	 *  Deletes an album from user's list given an album name 
-	 *  @param String name of album to be deleted
-	 *  @return boolean value indicating success or failure
+	 *  
+	 *  @param name Album name to be deleted
+	 *  @return Boolean value indicating success or failure
 	 */
 	public boolean deleteAlbum(String name) {
 		
@@ -70,7 +77,9 @@ public class User implements Serializable {
 		return false;
 	}
 	
-	/** Renames an album from user's list and replaces with new name
+	/**
+	 * Renames an album from user's list and replaces with new name
+	 * 
 	 * @param oldName The current name of the album
 	 * @param newName The new name for the album that will replace the current name
 	 */
@@ -87,29 +96,37 @@ public class User implements Serializable {
 	}
 	
 	/**
-	 * @return user id
+	 * Returns User Id
+	 * 
+	 * @return The user Id
 	 */
 	public String getID() {
 		return id;
 	}
 	
 	/**
-	 * @return An ArrayList containing this user's albums. 
+	 * Returns the albums associated with a single user
+	 * 
+	 * @return ArrayList containing this user's albums. 
 	 */
 	public ArrayList<Album> getAlbums() {
 		return new ArrayList<Album>(albums.values());
 	}
 	
 	/**
-	 * Get an album object from user collection by name.
-	 * @return album associated with name
+	 * Gets an album object from user collection by name.
+	 * 
+	 * @param name Album name
+	 * @return Album associated with name
 	 */
 	public Album getAlbum(String name) {
 		return albums.get(name);
 	}
 
 	/**
-	 * @return name of user.
+	 * Gets the name of a user
+	 * 
+	 * @return Name of user.
 	 */
 	public String getName() {
 		return name;
@@ -117,10 +134,11 @@ public class User implements Serializable {
 	
 	/**
 	 * Moves photo associated with filename from oldAlbumName to newAlbumName. 
-	 * @param filename - must exist in oldAlbumname
-	 * @param oldAlbumName - must exist in user collection and contain photo associated with filename
-	 * @param newAlbumName - must exist in user collection and not already contain photo associated with filename
-	 * @return true if and only if both oldAlbumName and newAlbumName exist, oldAlbumName contains filename, and newAlbumName does not contain filename
+	 * 
+	 * @param filename Must exist in oldAlbumname
+	 * @param oldAlbumName Must exist in user collection and contain photo associated with filename
+	 * @param newAlbumName Must exist in user collection and not already contain photo associated with filename
+	 * @return True if and only if both oldAlbumName and newAlbumName exist, oldAlbumName contains filename, and newAlbumName does not contain filename
 	 */
 	public boolean movePhoto(String filename, String oldAlbumName, String newAlbumName) {
 		
@@ -147,9 +165,10 @@ public class User implements Serializable {
 	
 
 	/**
+	 * Checks if a filename of a photo exists under this user
 	 * 
-	 * @param filename
-	 * @return true if and only if filename exists in photos
+	 * @param filename Name of the photo
+	 * @return True if and only if filename exists in photos
 	 */
 	public boolean hasPhoto(String filename) {
 		return photos.containsKey(filename);
@@ -157,7 +176,8 @@ public class User implements Serializable {
 	
 	/**
 	 * Adds photo object to photos
-	 * @param photo object to delete
+	 * 
+	 * @param Photo object to delete
 	 */
 	public void addPhoto(Photo photo) {
 		
@@ -165,8 +185,9 @@ public class User implements Serializable {
 	}
 	
 	/**
-	 * Delete photo from photos
-	 * @param filename of photo to delete
+	 * Deletes photo from photos
+	 * 
+	 * @param filename Name of photo to delete
 	 */
 	public void deletePhoto(String filename) {
 		
@@ -174,17 +195,30 @@ public class User implements Serializable {
 	}
 	
 	/**
-	 * Get photo associated with filename
-	 * @param filename
-	 * @return Photo object associated with filename. Null if filename does not exist in photos.
+	 * Gets photo associated with filename
+	 * 
+	 * @param filename Name of the photo
+	 * @return Photo object associated with filename, null if filename does not exist in photos.
 	 */
 	public Photo getPhoto(String filename) {
-		return photos.get(filename);
+		
+		String canonicalPath = "";
+		
+		try {
+			
+		 canonicalPath = Helper.getCanonicalPath(filename);
+		} catch (IOException e) {
+			System.out.println("Error: IOException getting canonical path of " + filename);
+			return null;
+		}
+		
+		return photos.get(canonicalPath);
 	}
 	
 	/**
 	 * Returns keys of photo HashMap as an ArrayList<Photo>
-	 * @return
+	 * 
+	 * @return ArrayList of keys of photo HashMap
 	 */
 	public ArrayList<Photo> getPhotos() {
 		return new ArrayList<Photo>(photos.values());

@@ -21,16 +21,21 @@ import java.util.HashMap;
  * a function to add a new User,
  * and a function to delete a User.  
  * This uses the Session Persistence model to determine when to save and load data.
+ * Implements Serializable and IBackend.
  */
 public class Backend implements Serializable, IBackend
 {
 
-	public static final String storeDir = "data";
-
-	public static final String storeFile = "data.dat";
-
+	/**Universal version identifier for a Serializable class. */
 	private static final long serialVersionUID = 1L;
-
+	
+	/**The name of the folder where data will be stored */
+	public static final String storeDir = "data";
+	
+	/**The file inside the folder where data will be stored */
+	public static final String storeFile = "data.dat";
+	
+	/** HashMap of User objects */
 	private HashMap<String, User> users;
 
 	/**
@@ -54,15 +59,25 @@ public class Backend implements Serializable, IBackend
 
 				System.err.println("Error: IOException while loading user data. " + e.getMessage());
 			}
+		} else {	//create file
+			
+			tmp.getParentFile().mkdirs();
+			try {
+				tmp.createNewFile();
+			} catch (IOException e) {
+				System.err.println("Error: IOException while creating data.dat file");
+			}
+			
 		}
 	}
 
-	@Override
 	/**
-	 * Delete a user from backend database
-	 * @param id - id of user to be deleted
-	 * @returns true if and only if user with id exists
+	 * Deletes a user from backend database
+	 * 
+	 * @param id User id to be deleted
+	 * @returns True if and only if user with id exists
 	 */
+	@Override
 	public boolean deleteUser(String id) {
 
 		if (users.containsKey(id)) {
@@ -73,31 +88,40 @@ public class Backend implements Serializable, IBackend
 		return false;
 	}
 
-	@Override
+	
 	/**
-	 *
+	 * Gets a users from corresponding user Id
+	 * 
+	 * @param id User Id
 	 * @return User object associated with id
 	 */
+	@Override
 	public User getUser(String id) {
 		return users.get(id);
 	}
 	
-	@Override
 	/**
+	 * Gets ArrayList of users stored in backend
+	 * 
 	 * @return ArrayList of user objects currently stored in backend
 	 */
+	@Override
 	public ArrayList<User> getUsers() {
 		return new ArrayList<User>(users.values());
 	}
 
-	@Override
 	/**
-	 * Create a user based on unique id and name
-	 * @return true if user with id does not already exist in database
+	 * Creates a user based on unique id and name
+	 * 
+	 * @param id User Id to be added
+	 * @param name User name to be added
+	 * @return True if user with id does not already exist in database
 	 */
+	@Override
 	public boolean addUser(String id, String name) {
 
-		if (users.containsKey(id)) return false;
+		if (users.containsKey(id)) 
+			return false;
 
 		User user = new User(id, name);
 		users.put(user.getID(), user);
@@ -106,10 +130,12 @@ public class Backend implements Serializable, IBackend
 
 	}
 
-	@Override
 	/**
-	 * Write contents of user HashMap to disk
+	 * Writes contents of user HashMap to disk
+	 * 
+	 * @throws IOException Constructs an IOException with null as its error detail message.
 	 */
+	@Override
 	public void writeUsers() throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(
 				new FileOutputStream(storeDir + File.separator + storeFile));
@@ -117,11 +143,15 @@ public class Backend implements Serializable, IBackend
 		oos.close();
 	}
 
+	
+	/**
+	 * Loads stored user information on disk to user HashMap 
+	 * 
+	 * @throws IOException Constructs an IOException with null as its error detail message.
+	 * @throws ClassNotFoundException No definition for the class with the specified name was found
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	/**
-	 * Load stored user information on disk to user HashMap 
-	 */
 	public void readUsers() throws IOException, ClassNotFoundException {
 		ObjectInputStream ois = new ObjectInputStream(
 				new FileInputStream(storeDir + File.separator + storeFile));
@@ -129,10 +159,13 @@ public class Backend implements Serializable, IBackend
 		ois.close();
 	}
 
-	@Override
 	/**
-	 * @return true if and only if user with id exists in database.
+	 * Checks if user exists in database
+	 * 
+	 * @param id User Id to be checked
+	 * @return True if and only if user with id exists in database.
 	 */
+	@Override
 	public boolean userExists(String id) {
 		return users.containsKey(id);
 	}
