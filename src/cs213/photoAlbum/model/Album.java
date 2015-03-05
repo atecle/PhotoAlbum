@@ -1,9 +1,12 @@
 package cs213.photoAlbum.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import cs213.photoAlbum.util.Helper;
 
 
 /**
@@ -57,8 +60,18 @@ public class Album implements Serializable {
      */
 	public Photo getPhoto(String filename) 
 	{
+		String canonicalPath = null;
 		
-		return photos.get(filename);
+		try {
+			canonicalPath = Helper.getCanonicalPath(filename);
+		} catch (IOException e) {
+			
+			System.err.println("Error: IOException getting canonical path from " + filename);
+		}
+		
+		if (canonicalPath == null) return null;
+		
+		return photos.get(canonicalPath);
 	}
 	
 	
@@ -105,10 +118,20 @@ public class Album implements Serializable {
 	 */
 	public boolean deletePhoto(String filename) {
 		
-		if (!photos.containsKey(filename)) 
+		String canonicalPath = null;
+		try {
+			
+			canonicalPath = Helper.getCanonicalPath(filename);
+		} catch (IOException e) {
+			System.err.println("Error: IOException getting canonical path from " + filename);
+		}
+		
+		if (canonicalPath == null) return false;
+		
+		if (!photos.containsKey(canonicalPath)) 
 			return false;
 		
-		photos.remove(filename);
+		photos.remove(canonicalPath);
 			return true;
 	}
 	
@@ -159,6 +182,18 @@ public class Album implements Serializable {
 	 */
 	public boolean containsPhoto(String filename) {
 		
-		return photos.containsKey(filename);
+		String canonicalPath = null;
+		
+		try {
+			
+			canonicalPath = Helper.getCanonicalPath(filename);
+		} catch (IOException e) {
+			System.err.println("Error: IOException getting canonical path from " + filename);
+		}
+		
+		if (canonicalPath == null) return false;
+		
+		
+		return photos.containsKey(canonicalPath);
 	}
 }

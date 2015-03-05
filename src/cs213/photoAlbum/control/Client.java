@@ -196,6 +196,9 @@ public class Client implements IClient
 		} else {
 
 			photo = user.getPhoto(canonicalPath);
+			if (caption.trim().length() != 0) {
+				photo.setCaption(caption);
+			}
 		}
 
 		photo.addtoAlbum(albumName);

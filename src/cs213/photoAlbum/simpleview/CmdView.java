@@ -340,9 +340,9 @@ public class CmdView
 					return;
 				}
 
-				if (client.addTag(tokens.get(1), tokens.get(2), tokens.get(3))) {
+				if (client.deleteTag(tokens.get(1), tokens.get(2), tokens.get(3))) {
 
-					System.out.println("Deleted tag:\n" + tokens.get(1) + " " + tokens.get(2) + ":" + tokens.get(3));
+					System.out.println("Deleted tag:\n" + tokens.get(1) + " " + tokens.get(2)  + tokens.get(3));
 				}
 
 				return;

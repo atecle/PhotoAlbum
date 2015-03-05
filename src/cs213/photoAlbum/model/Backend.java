@@ -61,8 +61,10 @@ public class Backend implements Serializable, IBackend
 			}
 		} else {	//create file
 			
-			tmp.getParentFile().mkdirs();
+			
+			tmp.getParentFile().mkdir();
 			try {
+
 				tmp.createNewFile();
 			} catch (IOException e) {
 				System.err.println("Error: IOException while creating data.dat file");

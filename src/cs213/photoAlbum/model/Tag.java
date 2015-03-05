@@ -119,9 +119,9 @@ public class Tag implements Serializable {
 			Tag tag = (Tag)o;
 			
 			if (tag.getType() == -1) {
-				retVal = (this.value.compareTo(tag.getValue()) == 0);
+				retVal = (this.value.compareToIgnoreCase(tag.getValue()) == 0);
 			} else {
-				retVal = (this.type == tag.getType() && this.value.compareTo(tag.getValue()) == 0);
+				retVal = (this.type == tag.getType() && this.value.compareToIgnoreCase(tag.getValue()) == 0);
 			}
 		}
 		

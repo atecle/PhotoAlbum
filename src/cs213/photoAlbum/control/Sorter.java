@@ -48,7 +48,7 @@ public class Sorter {
 		Collections.sort(locations, new Comparator<Tag>() {
 			@Override
 			public int compare(Tag lhs, Tag rhs) {
-		        return lhs.getValue().compareTo(rhs.getValue());
+		        return lhs.getValue().compareToIgnoreCase(rhs.getValue());
 		    }
 		});
 		
@@ -56,14 +56,14 @@ public class Sorter {
 		Collections.sort(people, new Comparator<Tag>() {
 			@Override
 			public int compare(Tag lhs, Tag rhs) {
-		        return lhs.getValue().compareTo(rhs.getValue());
+		        return lhs.getValue().compareToIgnoreCase(rhs.getValue());
 		    }
 		});
 		
 		Collections.sort(keywords, new Comparator<Tag>() {
 			@Override
 			public int compare(Tag lhs, Tag rhs) {
-		        return lhs.getValue().compareTo(rhs.getValue());
+		        return lhs.getValue().compareToIgnoreCase(rhs.getValue());
 		    }
 		});		
 		
