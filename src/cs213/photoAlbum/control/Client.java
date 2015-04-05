@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cs213.photoAlbum.model.Album;
 import cs213.photoAlbum.model.IBackend;
@@ -143,7 +144,7 @@ public class Client implements IClient
 	/**
 	 * {@inheritDoc}
 	 */
-	public ArrayList<Photo> listPhotos(String albumname) {
+	public List<Photo> listPhotos(String albumname) {
 
 		User user = backendInterface.getUser(id);
 
@@ -376,7 +377,7 @@ public class Client implements IClient
 	/**
 	 *	{@inheritDoc}
 	 */
-	public ArrayList<Photo> getPhotosbyDate(Date startDate, Date endDate) {
+	public List<Photo> getPhotosbyDate(Date startDate, Date endDate) {
 
 		ArrayList<Photo> photos = backendInterface.getUser(id).getPhotos();
 
@@ -394,7 +395,7 @@ public class Client implements IClient
 	/**
 	 * {@inheritDoc}
 	 */
-	public ArrayList<Photo> getPhotosByTag(ArrayList<String> tokens) {
+	public List<Photo> getPhotosByTag(List<String> tokens) {
 		
 		ArrayList<Tag> tags = new ArrayList<Tag>();
 		Tag tag = null;
@@ -454,5 +455,14 @@ public class Client implements IClient
 			}
 		}
 		return tagPhotos;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean renameAlbum(String oldName, String newName) {
+		
+		return backendInterface.getUser(id).renameAlbum(oldName, newName);
+		
 	}
 }

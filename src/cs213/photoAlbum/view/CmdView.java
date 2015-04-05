@@ -3,14 +3,11 @@
  * @author Adam Tecle
  */
 
-package cs213.photoAlbum.simpleview;
+package cs213.photoAlbum.view;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -19,10 +16,10 @@ import java.util.regex.Pattern;
 import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.control.Sorter;
 import cs213.photoAlbum.model.Album;
-import cs213.photoAlbum.model.Backend;
 import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.Tag;
 import cs213.photoAlbum.model.User;
+import cs213.photoAlbum.util.Helper;
 
 /**
  * 
@@ -34,33 +31,19 @@ import cs213.photoAlbum.model.User;
 public class CmdView 
 {
 
+
 	/** Client object declaration*/
 	private static Client client;
-
-	/**
-	 * Main method of the program which will process the arguments inputed in the command line
-	 * 
-	 * @params args	Argument inputed by the user
-	 */
-	public static void main(String[] args) {
-
-		client = new Client(new Backend());
-
-		Scanner sc = new Scanner(System.in);
-
-		System.out.println("Enter 'quit' to exit");
-		while (true) {
-			String input = sc.nextLine().trim();
-			parseInput(input, sc);
-		}
-
-
+	
+	public CmdView(Client client) {
+		CmdView.client = client;
 	}
-
+	
 	/** 
+	 * 
 	 * User can enter: delete user <tag> <name>, list user, add user <tag> <name>
 	 */
-	private static void parseInput(String input, Scanner sc) 
+	public void parseInput(String input, Scanner sc) 
 	{
 		//int userId = 0;
 		//String userName = null;
@@ -248,7 +231,7 @@ public class CmdView
 						System.out.println("No start date - No end date");
 					} else {
 
-						System.out.println(formatDate(album.getStartDate()) + " - " + formatDate(album.getEndDate()));
+						System.out.println(Helper.formatDate(album.getStartDate()) + " - " + Helper.formatDate(album.getEndDate()));
 					}
 
 				}
@@ -262,7 +245,7 @@ public class CmdView
 					return;
 				}
 
-				ArrayList<Photo> photos = client.listPhotos(tokens.get(1));
+				ArrayList<Photo> photos = (ArrayList<Photo>) client.listPhotos(tokens.get(1));
 
 				if (photos != null) {
 
@@ -270,7 +253,7 @@ public class CmdView
 
 					for (Photo photo : photos) {
 
-						System.out.println(photo.getName() +  " - " + formatDate(photo.getDate().getTime()));
+						System.out.println(photo.getName() +  " - " + Helper.formatDate(photo.getDate().getTime()));
 
 					}
 				}
@@ -372,7 +355,7 @@ public class CmdView
 				}
 
 				System.out.println();
-				System.out.println("Date: " + formatDate(photo.getDate().getTime()));
+				System.out.println("Date: " + Helper.formatDate(photo.getDate().getTime()));
 				System.out.println("Caption: " + photo.getCaption());
 
 				ArrayList<Tag> tags = photo.getTags();
@@ -410,7 +393,7 @@ public class CmdView
 					return;
 				}
 
-				photos = client.getPhotosbyDate(parsedStartDate, parsedEndDate);
+				photos = (ArrayList<Photo>) client.getPhotosbyDate(parsedStartDate, parsedEndDate);
 
 				photos = Sorter.sortDates(photos);
 				System.out.println("Photos for user " + client.getCurrentUserID() + " in range " + startDate + " - " + endDate);
@@ -423,7 +406,7 @@ public class CmdView
 						System.out.print(", " + p.getAlbumNames().get(i));
 					}
 
-					System.out.println(" - Date: " + formatDate(p.getDate().getTime()));
+					System.out.println(" - Date: " + Helper.formatDate(p.getDate().getTime()));
 				}
 
 				return;
@@ -443,7 +426,7 @@ public class CmdView
 				}
 				
 				System.out.println();
-				photos = client.getPhotosByTag(tokens);
+				photos = (ArrayList<Photo>) client.getPhotosByTag(tokens);
 				
 				for (Photo p : photos) {
 					
@@ -454,7 +437,7 @@ public class CmdView
 						System.out.print(", " + p.getAlbumNames().get(i));
 					}
 					
-					System.out.println(" - Date: " + formatDate(p.getDate().getTime()));
+					System.out.println(" - Date: " + Helper.formatDate(p.getDate().getTime()));
 				}
 
 				return;
@@ -472,16 +455,6 @@ public class CmdView
 
 	}
 
-	/**
-	 * Formats the date correctly
-	 * 
-	 * @param date The date to be formatted
-	 * @return Formatted date
-	 */
-	private static String formatDate(Date date) {
-		DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy-HH:mm:ss");
-		return outputFormat.format(date);
-	}
 
 
 	private static ArrayList<String> tokenizer(String input) {

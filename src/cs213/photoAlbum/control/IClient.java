@@ -2,6 +2,7 @@ package cs213.photoAlbum.control;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cs213.photoAlbum.model.Album;
 import cs213.photoAlbum.model.Photo;
@@ -36,7 +37,7 @@ public interface IClient {
 	 * 
 	 * @return ArrayList of currently stored users.
 	 */
-	public ArrayList<User> getUsers();
+	public List<User> getUsers();
 	
 	/**
 	 * Login as a user and switch to interactive mode in command view. 
@@ -74,7 +75,7 @@ public interface IClient {
 	 * 
 	 * @return ArrayList of albums for currently logged in user.
 	 */
-	public ArrayList<Album> listAlbums();
+	public List<Album> listAlbums();
 	
 	/**
 	 * Returns Id of currently logged in user
@@ -89,7 +90,7 @@ public interface IClient {
 	 * @param albumname Name of album that must exist in user's album collection
 	 * @return ArrayList of photo objects stored in albumname, null if albumname does not exist
 	 */
-	public ArrayList<Photo> listPhotos(String albumname);
+	public List<Photo> listPhotos(String albumname);
 	
 	/**
 	 * Adds a photo to an album. Passed filename must be the name of an existing file on disk, need not be a photo file. Caption will
@@ -170,7 +171,7 @@ public interface IClient {
 	 * @param endDate End date range.
 	 * @return ArrayList of all photos within specified range.
 	 */
-	public ArrayList<Photo> getPhotosbyDate(Date startDate, Date endDate);
+	public List<Photo> getPhotosbyDate(Date startDate, Date endDate);
 	
 	/**
 	 * Returns Arraylist of all photos by tag indicated by tokens
@@ -178,6 +179,15 @@ public interface IClient {
 	 * @param tokens Contains the tag type of photos 
 	 * @return ArrayList of all photo objects having all tags indicated in tokens
 	 */
-	public ArrayList<Photo> getPhotosByTag(ArrayList<String> tokens);
+	public List<Photo> getPhotosByTag(List<String> tokens);
+	
+	/**
+	 * Rename an album.
+	 * 
+	 * @param oldName album to be renamed
+	 * @param newName new name of album
+	 * @return
+	 */
+	public boolean renameAlbum(String oldName, String newName);
 	
 }
