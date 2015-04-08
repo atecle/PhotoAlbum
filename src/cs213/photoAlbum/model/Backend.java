@@ -132,6 +132,21 @@ public class Backend implements Serializable, IBackend
 		return true;
 
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public boolean addUser(String id, String name, String password) {
+		
+		if (users.containsKey(id)) 
+			return false;
+
+		User user = new User(id, name, password);
+		users.put(user.getID(), user);
+
+		return true;
+	}
 
 	/**
 	 * Writes contents of user HashMap to disk
@@ -173,4 +188,8 @@ public class Backend implements Serializable, IBackend
 		return users.containsKey(id);
 	}
 
+	@Override
+	public boolean checkPassword(String pw, String id) {
+		return users.get(id).loginSuccess(pw);
+	}
 }

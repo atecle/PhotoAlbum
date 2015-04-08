@@ -15,46 +15,17 @@ import javax.swing.table.DefaultTableModel;
 
 import cs213.photoAlbum.control.Client;
 
-/**
- * This class is responsible for the display and the functionality on the CreateOrRenameAlbumView window.
- * A user can create a new album or rename an already existing album.
- *
- */
 @SuppressWarnings("serial")
 public class CreateOrRenameAlbumView extends JFrame {
 
-    /**The frame of the CreateOrRenameAlbumView*/
+
 	private JPanel contentPane;
-	
-	/**Label for album name*/
 	private JLabel albumNameLabel;
-	
-	/**Textfield for album name input*/
 	private JTextField albumNameField;
-	
-	/**Save button for saving changes*/
 	private JButton saveButton;
-	
-	/**Client object declaration*/
 	private Client client;
-	
-	/**Works with JTable to organize layout of data*/
 	private DefaultTableModel listModel;
 
-	
-	private boolean add; //not used 
-	private String albumName; //not used
-	
-	/**
-	 * Class constructor which creates the frame of the CreateOrRenameAlbumView Window
-	 * 
-	 * @param c  Allows access to the stored data in Client
-	 * @param mod DefaultTableModel for formatting layout of content
-	 * @param title Title of window
-	 * @param add Boolean value for adding a new album
-	 * @param albumName The album's name
-	 * @param row Table row for formatting
-	 */
 
 	public CreateOrRenameAlbumView(Client c, DefaultTableModel mod, String title, final boolean add, final String albumName, final int row) {
 

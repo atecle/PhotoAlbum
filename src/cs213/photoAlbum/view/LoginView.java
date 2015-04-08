@@ -5,37 +5,58 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
 import cs213.photoAlbum.control.Client;
-import cs213.photoAlbum.model.Backend;
 import cs213.photoAlbum.model.User;
 
+/**
+ * 
+ * This class is responsible for the display and the functionality on the LoginView window. 
+ * The Login window will allow for a special user "admin" to login, which will then call the AdminView class.
+ * Once a user is successfully logged in, the CollectionView class is implemented. 
+ *
+ */
 public class LoginView extends JFrame {
 
+	/**Universal version identifier for a Serializable class.*/
 	private static final long serialVersionUID = 1L;
+
+	/**Label for list of users*/
 	private JLabel userLabel;
-	private JPasswordField passwordTextField;
-	private BufferedImage loginIcon;
-	private JComboBox<String> usersList;
+
+	/**Textfield for password input*/
+	private JPasswordField passwordField;
+
+	/**Holds the list of users currently stored*/
+	private JComboBox<User> usersList;
+
+	/**Login button for current users or special user "admin"*/
 	private JButton loginButton;
+
+	/**The frame of the LoginView*/
 	private JPanel window;
-	private Client client;
-	private static JFrame nysm;
 
+	final private User admin = new User("-1", "Admin");
 
+	private DefaultComboBoxModel<User> comboBoxModel;
+
+	/**Client object declaration*/
+	public Client client;
+
+	/**
+	 * Class constructor which creates the frame of the LoginView Window
+	 * 
+	 * @param c Allows access to the stored data
+	 */
 	public LoginView(Client c) {
 
 		super("Login");
@@ -43,75 +64,86 @@ public class LoginView extends JFrame {
 		setSize(300, 250);
 		setResizable(true);
 		this.client = c;
-		final ArrayList<User> users = client.getUsers();
-		usersList = new JComboBox<String>();
 
-		User admin = new User("-1", "Admin");
-		for (User user : users) {
-			usersList.addItem(user.getName());
-		}
-		usersList.addItem(admin.getName());
-
-
+		usersList = new JComboBox<User>();
+		comboBoxModel = new DefaultComboBoxModel<User>(client.getUsers().toArray(new User[client.getUsers().size()]));
+		comboBoxModel.addElement(admin);
+		usersList.setModel(comboBoxModel);
 
 		userLabel = new JLabel("User: ");
 
-		passwordTextField = new JPasswordField(20);
-		passwordTextField.setEditable(true);
+		passwordField = new JPasswordField(20);
+		passwordField.setEditable(true);
 
 		usersList.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				String name = (String) usersList.getSelectedItem();
-				if (name.compareTo("Admin") == 0) {
-					passwordTextField.setText("");
-					passwordTextField.setEditable(false);
+				User user = (User) usersList.getSelectedItem();
+				if (user == null)  {
+					passwordField.setEditable(true);
+					return;	
+				}
+				if (user.getName().compareTo("Admin") == 0) {
+					passwordField.setText("");
+					passwordField.setEditable(false);
 				}
 				else {
-					passwordTextField.setEditable(true);
+					passwordField.setEditable(true);
 				}
 
 			}
 		});
 
-		try {
-
-			loginIcon = ImageIO.read(new File("assets/login.png"));
-		} catch (IOException e) {
-
-			System.err.println("Error loading login icon. " + e.getMessage());
-		}
-
-		loginButton = new JButton(new ImageIcon(loginIcon));
-		loginButton.setBorderPainted(false);
+		loginButton = new JButton("Login");
 
 		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				String pw = passwordTextField.getPassword().toString();
-				String name = (String) usersList.getSelectedItem();
-				if (name.compareTo("Admin") == 0) {
-					//This is where you would spawn the admin view window and close 
-					AdminView.nowYouSeeMe(); 
+				String pw = new String(passwordField.getPassword());
+				User user = (User) usersList.getSelectedItem();
+
+				if (user.getName().compareTo("Admin") == 0) {
+
+					final AdminView adminView = new AdminView(client);
+
+					adminView.addWindowListener(new WindowAdapter() {
+
+						public void windowClosing(WindowEvent e) {
+
+
+							client.writeUsers();
+							usersList.removeAllItems();
+							comboBoxModel = new DefaultComboBoxModel<User>(client.getUsers().toArray(new User[client.getUsers().size()]));
+							comboBoxModel.addElement(admin);
+							usersList.setModel(comboBoxModel);
+							setVisible(true);
+							adminView.dispose();
+							return;
+
+						}
+					});
+
+					adminView.setLocationRelativeTo(null);
+					adminView.setVisible(true);
+					setVisible(false);
 				}
 				else {
 
-					User user = users.get(usersList.getSelectedIndex());
-					
 					if (user.loginSuccess(pw)) {
-						
+
 						final CollectionView collectionView = new CollectionView(user, client);
 						client.login(user.getID());
-						
+
 						collectionView.addWindowListener(new WindowAdapter() {
-							
+
 							public void windowClosing(WindowEvent e) {
-								
+
 								client.writeUsers();
 								setVisible(true);
 								collectionView.dispose();
+								return;
 
 							}
 						});
@@ -120,6 +152,12 @@ public class LoginView extends JFrame {
 						collectionView.setVisible(true);
 						setVisible(false);
 					}
+					else {
+						
+						JOptionPane.showMessageDialog(null, "Entered wrong password. Try again.", 
+								"Incorrect password", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 				}
 			}
 		});
@@ -127,29 +165,12 @@ public class LoginView extends JFrame {
 		window = new JPanel(new FlowLayout());
 		window.add(userLabel);
 		window.add(usersList);
-		window.add(passwordTextField);
+		window.add(passwordField);
 		window.add(loginButton);
-		
+
 		add(window);
 
 	}
-
-	//This is called in LoginView so AdminView can be seen!
-	public static void nowYouSeeMe() 
-	{
-		// TODO Auto-generated method stub
-		Client c = new Client(new Backend());
-		nysm = new LoginView(c);
-		nysm.setVisible(true);
-
-		//Want to have the window centered on screen
-		nysm.setLocationRelativeTo(null);
-		nysm.setResizable(true);  
-		nysm.setMinimumSize(nysm.getMinimumSize());
-		nysm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-	}
-
 
 
 }

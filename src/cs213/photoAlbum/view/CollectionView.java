@@ -18,27 +18,48 @@ import cs213.photoAlbum.model.Album;
 import cs213.photoAlbum.model.User;
 import cs213.photoAlbum.util.Helper;
 
+/**
+ * This class is responsible for the display and the functionality on the CollectionView window.
+ * This is the first window the user sees once they have successfully logged in. 
+ * A list of the user's albums, date range and number of photos associated with each album are listed.
+ * The user can choose to open an album, rename an album, delete an existing album, create a new album and search.
+ *
+ */
 public class CollectionView extends JFrame {
-
+	
+	/**Universal version identifier for a Serializable class.*/
 	private static final long serialVersionUID = 1L;
 
-	private JPanel contentPane;
+	/**The frame of CollectionView*/
+	private JPanel contentPane, buttonPanel;
 
+	/**Organizes album, date range and number of photos*/
 	private JTable table;
 
+	/**ScrollPane declaration*/
 	private JScrollPane scrollPane;
 
+	/**Works with JTable to organize layout of data*/
 	private DefaultTableModel listModel;
 
+	/**User object declaration*/
 	private User user;
 
+	/**Holds list of albums for the current logged in user*/
 	private ArrayList<Album> albums;
 
+	/**Client object declaration*/
 	private Client client;
 
+	/**Search, Open, Rename, Delete and Create buttons*/
 	private JButton searchButton, openButton, renameButton, deleteButton, createButton;
 
-
+/**
+ * Class constructor which creates the frame of the CollectionView Window
+ * 
+ * @param u Allows access to the logged in user's information
+ * @param c Allows access to the stored data in Client
+ */
 	@SuppressWarnings("serial")
 	public CollectionView(User u, Client c) {
 
@@ -150,7 +171,7 @@ public class CollectionView extends JFrame {
 			}
 		});
 
-		JPanel buttonPanel = new JPanel();
+		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
 
 		buttonPanel.add(createButton);

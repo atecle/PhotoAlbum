@@ -31,6 +31,11 @@ public interface IBackend {
 	 */
 	public boolean addUser(String id, String name);
 	
+	/**
+	 * 
+	 */
+	public boolean addUser(String id, String name, String password);
+	
 
 	/**
 	 * Gets a users from corresponding user Id
@@ -60,6 +65,11 @@ public interface IBackend {
 	 * @param id User Id to be checked
 	 */
 	public boolean userExists(String id);
+	
+	/**
+	 * 
+	 */
+	public boolean checkPassword(String pw, String id);
 	
 	
 }

@@ -10,29 +10,38 @@ import cs213.photoAlbum.view.LoginView;
 public class PhotoAlbumApp {
 
 	public static void main(String[] args) {
+
+		Client c = new Client(new Backend());
 		
-		Client client = new Client(new Backend());
-		/*CmdView cmdView = new CmdView(client);
+		ShutdownHook sdh = new ShutdownHook(c);
+		sdh.attachShutDownHook();
 		
-		Scanner sc = new Scanner(System.in);
-		
-		System.out.println("Enter 'quit' to exit");
-		while (true) {
-			
-			String input = sc.nextLine();
-			cmdView.parseInput(input, sc);
-		}*/
-		
-		LoginView loginView = new LoginView(client);
-		
+		LoginView loginView = new LoginView(c);
 		loginView.setLocationRelativeTo(null);
 		loginView.setVisible(true);
+		
 		loginView.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
 		});
-		
+	}
+}
+
+
+class ShutdownHook {
+	
+	private Client client;
+
+	public ShutdownHook(Client c) { this.client = c; }
+	
+	public void attachShutDownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				client.writeUsers();
+			}
+		});
 	}
 }

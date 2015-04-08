@@ -238,8 +238,13 @@ public class User implements Serializable {
 
 	public boolean loginSuccess(String enteredPassword) {
 		
-		return true;
-		//return password.compareTo(enteredPassword) == 0 || password.length() == 0;
+		if (password == null) return true;
+		return password.compareTo(enteredPassword) == 0 || password.length() == 0;
+	}
+	
+	public String toString() {
+		
+		return name;
 	}
 
 }

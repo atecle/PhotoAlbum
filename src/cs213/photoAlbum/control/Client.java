@@ -54,6 +54,11 @@ public class Client implements IClient
 
 		return backendInterface.addUser(id, name);
 	}
+	
+	public boolean addUser(String id, String name, String password) {
+	
+		return backendInterface.addUser(id, name, password);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -465,4 +470,13 @@ public class Client implements IClient
 		return backendInterface.getUser(id).renameAlbum(oldName, newName);
 		
 	}
+	
+	
+	/**
+	 * 
+	 */
+	public boolean checkPassword(String pw, String id) {
+		return backendInterface.checkPassword(pw, id);
+	}
+
 }

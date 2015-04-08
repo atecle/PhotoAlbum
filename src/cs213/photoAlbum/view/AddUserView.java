@@ -1,111 +1,133 @@
 package cs213.photoAlbum.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.GridBagLayout;
 
-import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import cs213.photoAlbum.control.Client;
+import cs213.photoAlbum.model.User;
 
 
-
+/**
+ * This class is responsible for the display and the functionality on the DeleteUserView window. 
+ * The user "admin" can add a new user by inputting a new user name and a corresponding user id.
+ *
+ */
 
 public class AddUserView extends JFrame 
 {
 
-	private static JFrame nysm;
-	private JButton add;
-	private JTextField userID;
-	private JTextField userName;
-	private JPanel window;
+	/**Universal version identifier for a Serializable class.*/
+	private static final long serialVersionUID = 1L;
 
+	/** To replace default content pane **/
+	private JPanel contentPane;
 
+	/**Add button for creating a new user*/
+	private JButton addButton;
+
+	/**Textfield for user id and name input */
+	private JTextField userIDField, userNameField;
+
+	/** Label for user name, id, and password field, **/
+	private JLabel nameLabel, userIDLabel, userPasswordLabel;
 	
-	public AddUserView(String pageHead)
+	/**Textfield for password input*/
+	private JPasswordField passwordField;
+
+	/**Client object declaration*/
+	private Client client;
+
+	private DefaultListModel<User> listModel;
+	
+
+
+	/**
+	 * Class constructor which creates the frame of the AddUserView Window
+	 * 
+	 * @param pageHead Title of the AdminView Window
+	 * @param c  Allows access to the stored data 
+	 */
+	public AddUserView(Client c, DefaultListModel<User> m)
 	{
-		super(pageHead);
-		
-		add= new JButton(" Add User");
-		add.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		userID = new JTextField(10);
-		userName = new JTextField(10);
-		
-		
-		JLabel nameLabel = new JLabel("Enter New User Name: ");
-		JLabel IDLabel = new JLabel("Enter New User ID: ");
+		super("Add User");
+		this.client = c;
+		this.listModel = m;
+		setSize(300,230);
 
-		
 
-		//Action Listeners
-		add.addActionListener(new ActionListener() {
+		addButton = new JButton("Add User");
+		addButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
+
+		userIDField = new JTextField(20);
+		userNameField = new JTextField(20);
+		passwordField = new JPasswordField(20);
+		passwordField.setEditable(true);
+
+		nameLabel = new JLabel("Enter User Name: ");
+		userIDLabel = new JLabel("Enter User ID: ");
+		userPasswordLabel = new JLabel("Enter Password: ");
+
+		addButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
-			    //String ID = userID.getText();
-				//String name = userName.getText();
 
-				System.out.println("This is where we're adding a user");
+				String id = userIDField.getText();
 
-								
+				String name = userNameField.getText();
+				
+				String password = new String(passwordField.getPassword());				
+				
+				if (id.length() == 0) {
+
+					JOptionPane.showMessageDialog(null, "ID cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				if (name.length() == 0) {
+
+					JOptionPane.showMessageDialog(null, "Name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				if (!client.addUser(id, name, password)) {
+
+					JOptionPane.showMessageDialog(null, "User with specified ID already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				User user = new User(id, name, password);
+				listModel.addElement(user);
+				client.writeUsers();
+				dispose();
+
 			}
-								
-		});
-		
-		JPanel background = new JPanel();
-		
-		JPanel content = new JPanel();
-		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-		
-		JPanel namePanel = new JPanel();
-		namePanel.add(nameLabel);
-		namePanel.add(userName);
-		
-		JPanel IdPanel = new JPanel();
-		IdPanel.add(IDLabel);
-		IdPanel.add(userID);
-		
-		content.add(namePanel);
-		content.add(IdPanel);
-		content.add(add);
-		
-		add(background, BorderLayout.NORTH);
-		add(content, BorderLayout.CENTER);
-		
-	}
-	
-	
-	
-	
-	
-	public static void nowYouSeeMe() 
-	{
-		// TODO Auto-generated method stub
-		
-		nysm = new AddUserView("Add User");
-		nysm.setSize(300,150);
-		nysm.setVisible(true);
-		// center on screen
-		nysm.setLocationRelativeTo(null);
-		nysm.setResizable(false); 
-		nysm.setMinimumSize(nysm.getMinimumSize());
 
-		nysm.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				nysm.dispose();
-			}
 		});
-		
-	}
 
+		contentPane = new JPanel(new FlowLayout());
+
+		contentPane.add(nameLabel);
+		contentPane.add(userNameField);
+		contentPane.add(userIDLabel);
+		contentPane.add(userIDField);
+		contentPane.add(userPasswordLabel);
+		contentPane.add(passwordField);
+		contentPane.add(addButton);
+
+		add(contentPane);
+
+	}
 }
+
+
+
