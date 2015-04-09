@@ -242,7 +242,7 @@ public class Photo implements Serializable {
 		if (thumbnail == null) {
 
 			try {
-				//magic numbers
+				//magic #s
 				Image image = ImageIO.read(new File("assets/blankIcon.png")).getScaledInstance(100, 67, Image.SCALE_SMOOTH);
 				this.thumbnail = new ImageIcon(image);
 			} catch (IOException e) {

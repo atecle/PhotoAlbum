@@ -116,7 +116,7 @@ public class AdminView extends JFrame
 
 		contentPane.add(buttonPanel, BorderLayout.PAGE_END);
 		
-		add(contentPane);
+		setContentPane(contentPane);
 		
 	}
 

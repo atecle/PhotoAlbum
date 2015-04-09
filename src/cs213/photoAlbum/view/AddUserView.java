@@ -124,7 +124,7 @@ public class AddUserView extends JFrame
 		contentPane.add(passwordField);
 		contentPane.add(addButton);
 
-		add(contentPane);
+		setContentPane(contentPane);
 
 	}
 }

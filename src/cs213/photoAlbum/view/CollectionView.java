@@ -202,7 +202,7 @@ public class CollectionView extends JFrame {
 		buttonPanel.add(searchButton);
 
 		contentPane.add(buttonPanel, BorderLayout.PAGE_END);
-		add(contentPane);
+		setContentPane(contentPane);
 
 	}
 

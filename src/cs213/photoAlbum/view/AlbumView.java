@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -44,7 +46,7 @@ public class AlbumView extends JFrame {
 	public AlbumView(Client c, final String albumName) {
 
 		super(c.getUser() +  "'s " + albumName);
-		setSize(600, 400);
+		setSize(700, 400);
 		this.client = c;
 
 		photoList = new JList<Photo>();
@@ -68,7 +70,10 @@ public class AlbumView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				//strange behavior here. files are only filtered after I select Image Files in the combo box. 
+				//strange behavior below. files are only filtered after I select Image Files in the combo box. By default, all are choosable. 
+				//so can't guarantee through filechooser that user selects an image, hence isImage() call
+				
+				
 				JFileChooser fc = new JFileChooser();
 				FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
 				fc.setFileFilter(imageFilter);
@@ -80,17 +85,15 @@ public class AlbumView extends JFrame {
 					File file = fc.getSelectedFile();
 
 					if (!isImage(file))  {
-						//wish file chooser just actually 
 						JOptionPane.showMessageDialog(null, "Invalid file type.", "Error", JOptionPane.ERROR_MESSAGE);
-
 						return;
-					
 					}
-					
-					
+
 					String filePath = null;
 					boolean addSuccess = false;
+
 					try {
+
 						addSuccess = client.addPhoto((filePath = file.getCanonicalPath()), " ---- ", albumName);
 					} catch (IOException e2) {
 						return;
@@ -126,11 +129,29 @@ public class AlbumView extends JFrame {
 			}
 		});
 
-		recaptionButton = new JButton("Recaption Photo");
+		recaptionButton = new JButton("Recaption");
 		recaptionButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				Photo p = photoList.getSelectedValue();
+				if (p == null) return;
+				
+				RecaptionView recapView = new RecaptionView(client, p.getName());
+				
+				recapView.setLocationRelativeTo(null);
+				recapView.setVisible(true);
+				recapView.addWindowListener(new WindowAdapter() {
+
+					public void windowClosing(WindowEvent e) {
+						
+						client.writeUsers();
+						setVisible(true);
+					}
+				});
+				
+				
 
 			}
 		});
@@ -169,15 +190,17 @@ public class AlbumView extends JFrame {
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 
 		buttonPanel = new JPanel(new FlowLayout());
+		buttonPanel.add(openButton);
 		buttonPanel.add(addButton);
 		buttonPanel.add(removeButton);
 		buttonPanel.add(addTagButton);
 		buttonPanel.add(removeTagButton);
-		buttonPanel.add(openButton);
+		buttonPanel.add(recaptionButton);
+		
 
 		contentPane.add(buttonPanel, BorderLayout.PAGE_END);
 
-		add(contentPane);
+		setContentPane(contentPane);
 
 	}
 
