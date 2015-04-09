@@ -144,6 +144,11 @@ public class CollectionView extends JFrame {
 						client.writeUsers();
 						int newSize = client.getUser().getAlbum(albumName).getSize();
 						table.setValueAt(newSize, row, 2);
+						String newStart = Helper.formatDate(client.getUser().getAlbum(albumName).getStartDate());
+						newStart = newStart.compareTo("No date") == 0 ? "No start date" : newStart.substring(0, newStart.indexOf("-"));
+						String newEnd = Helper.formatDate(client.getUser().getAlbum(albumName).getEndDate());
+						newEnd = newEnd.compareTo("No date") == 0 ? "No end date" : newEnd.substring(0, newEnd.indexOf("-"));
+						table.setValueAt(newStart + " - " + newEnd, row, 1);
 						setVisible(true);
 					}
 				});
@@ -179,6 +184,7 @@ public class CollectionView extends JFrame {
 				((DefaultTableModel) table.getModel()).removeRow(index);
 			}
 		});
+	
 
 		createButton = new JButton("Create");
 		createButton.addActionListener(new ActionListener() {

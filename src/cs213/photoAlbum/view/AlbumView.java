@@ -72,8 +72,8 @@ public class AlbumView extends JFrame {
 
 				//strange behavior below. files are only filtered after I select Image Files in the combo box. By default, all are choosable. 
 				//so can't guarantee through filechooser that user selects an image, hence isImage() call
-				
-				
+
+
 				JFileChooser fc = new JFileChooser();
 				FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
 				fc.setFileFilter(imageFilter);
@@ -122,8 +122,6 @@ public class AlbumView extends JFrame {
 
 				if (p == null) return;
 
-				client.removePhoto(p.getName(), albumName);
-
 				listModel.removeElement(p);
 
 			}
@@ -134,24 +132,24 @@ public class AlbumView extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				Photo p = photoList.getSelectedValue();
 				if (p == null) return;
-				
+
 				RecaptionView recapView = new RecaptionView(client, p.getName());
-				
+
 				recapView.setLocationRelativeTo(null);
 				recapView.setVisible(true);
 				recapView.addWindowListener(new WindowAdapter() {
 
 					public void windowClosing(WindowEvent e) {
-						
+
 						client.writeUsers();
 						setVisible(true);
 					}
 				});
-				
-				
+
+
 
 			}
 		});
@@ -196,7 +194,7 @@ public class AlbumView extends JFrame {
 		buttonPanel.add(addTagButton);
 		buttonPanel.add(removeTagButton);
 		buttonPanel.add(recaptionButton);
-		
+
 
 		contentPane.add(buttonPanel, BorderLayout.PAGE_END);
 

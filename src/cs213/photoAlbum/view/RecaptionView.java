@@ -50,6 +50,8 @@ public class RecaptionView extends JFrame {
 				
 			}
 		});
+		
+		
 		captionLabel = new JLabel("Enter a caption:");
 		captionField = new JTextField(20);
 		
