@@ -1,6 +1,7 @@
 package cs213.photoAlbum.model;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,6 +40,9 @@ public class Photo implements Serializable {
 
 	/** Thumbnail icon */
 	private ImageIcon thumbnail = null;
+	
+	/** file object **/
+	private File file;
 
 
 	/**
@@ -50,7 +54,36 @@ public class Photo implements Serializable {
 	public Photo(String filename, String caption) {
 
 		this.filename = filename;
-		File file = new File(filename);
+		File f = new File(filename);
+		this.file = f;
+
+		Image image = null;
+
+		try {
+			image = ImageIO.read(file).getScaledInstance(100, 67, Image.SCALE_SMOOTH);
+		} catch (IOException e) {
+			//should never happen, this exception is caught outside of constructor call when checking if selected file is an image.
+			System.err.println("IOException while reading image file. " + e.getMessage());
+		}
+		
+		this.thumbnail = new ImageIcon(image);
+
+		Calendar cal = Calendar.getInstance();
+		Date date = new Date(file.lastModified());
+		cal.setTime(date);
+		cal.set(Calendar.MILLISECOND, 0);
+		setDate(cal);
+
+
+		this.caption = caption;
+		tags = new ArrayList<Tag>();
+		albumNames = new ArrayList<String>();
+	}
+
+	public Photo (File file, String caption) throws IOException{
+
+		this.filename = file.getCanonicalPath();
+
 
 		Calendar cal = Calendar.getInstance();
 		Date date = new Date(file.lastModified());
@@ -207,9 +240,10 @@ public class Photo implements Serializable {
 	public ImageIcon getThumbnail() {
 
 		if (thumbnail == null) {
-		
+
 			try {
-				this.thumbnail = new ImageIcon(ImageIO.read(new File("assets/blankIcon.png")));
+				Image image = ImageIO.read(new File("assets/blankIcon.png")).getScaledInstance(100, 67, Image.SCALE_SMOOTH);
+				this.thumbnail = new ImageIcon(image);
 			} catch (IOException e) {
 				System.err.println("Can't find blank icon image. " + e.getMessage());
 			}
