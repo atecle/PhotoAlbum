@@ -104,15 +104,6 @@ public class CollectionView extends JFrame {
 		scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 
-		/*
-		 * Adds the logout button in the top right. Think it might be better to just logout when the window is closed.
-		 * JPanel topPanel = new JPanel();
-		topPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		logoutButton = new JButton("Logout");
-		logoutButton.setHorizontalAlignment(JButton.RIGHT);
-		topPanel.add(logoutButton);
-		contentPane.add(topPanel, BorderLayout.NORTH);
-		 */
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 
 		searchButton = new JButton("Search Photo");

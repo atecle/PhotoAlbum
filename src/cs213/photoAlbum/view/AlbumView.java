@@ -175,8 +175,7 @@ public class AlbumView extends JFrame {
 						
 					}
 					
-				}
-				);
+				});
 			}
 		});
 
@@ -186,7 +185,24 @@ public class AlbumView extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
+				Photo p = photoList.getSelectedValue();
+				
+				if (p == null) return;
+				
+				RemoveTagView rmTagView = new RemoveTagView(client, p.getName());
+				
+				rmTagView.setLocationRelativeTo(null);
+				rmTagView.setVisible(true);
+				
+				rmTagView.addWindowListener(new WindowAdapter() {
+					
+					public void windowClosing(WindowEvent e) {
+						
+						client.writeUsers();
+					}
+				});
+				
 			}
 		});
 
