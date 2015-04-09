@@ -162,6 +162,15 @@ public class Photo implements Serializable {
 	public void addTag(int type, String text) {
 		tags.add(new Tag(type, text));
 	}
+	
+	/**
+	 * Adds tag to tag list
+	 * 
+	 * @param tag Tag to be added
+	 */
+	public void addTag(Tag tag) {
+		tags.add(tag);
+	}
 
 	/**
 	 * Removes tag identified by type and value from this photo object

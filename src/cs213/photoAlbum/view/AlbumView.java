@@ -2,7 +2,6 @@ package cs213.photoAlbum.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -53,13 +52,13 @@ public class AlbumView extends JFrame {
 		listModel = new DefaultListModel<Photo>();
 		IconListCellRenderer renderer = new IconListCellRenderer();
 
-
 		for (Photo photo : client.getUser().getAlbum(albumName).getPhotos()) {
 			listModel.addElement(photo);
 		}
 
 		photoList = new JList<Photo>(listModel);
 		photoList.setCellRenderer(renderer);
+		//photoList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		photoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane = new JScrollPane(photoList);
 
@@ -145,7 +144,6 @@ public class AlbumView extends JFrame {
 					public void windowClosing(WindowEvent e) {
 
 						client.writeUsers();
-						setVisible(true);
 					}
 				});
 
@@ -160,7 +158,25 @@ public class AlbumView extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				final Photo p = photoList.getSelectedValue();
+				
+				if (p == null) return;
 
+				AddTagView addTagView = new AddTagView(client, p.getName());
+				addTagView.setLocationRelativeTo(null);
+				addTagView.setVisible(true);
+				
+				addTagView.addWindowListener(new WindowAdapter() {
+					
+					public void windowClosing(WindowEvent e) {
+						
+						client.writeUsers();
+						
+					}
+					
+				}
+				);
 			}
 		});
 
