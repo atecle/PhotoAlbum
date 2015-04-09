@@ -24,7 +24,7 @@ public class Client implements IClient
 
 	/**Command mode, set to integer 0*/
 	private static final int COMMAND = 0;
-	
+
 	/**Interactive mode, set to integer 1*/
 	private static final int INTERACTIVE = 1;
 
@@ -54,9 +54,9 @@ public class Client implements IClient
 
 		return backendInterface.addUser(id, name);
 	}
-	
+
 	public boolean addUser(String id, String name, String password) {
-	
+
 		return backendInterface.addUser(id, name, password);
 	}
 
@@ -189,7 +189,7 @@ public class Client implements IClient
 
 		if (!user.hasPhoto(filename)) {
 
-			
+
 			try {
 				canonicalPath = file.getCanonicalPath();
 			} catch (IOException e) {
@@ -197,7 +197,7 @@ public class Client implements IClient
 				e.printStackTrace();
 			}
 			photo = new Photo(canonicalPath, caption);
-			
+
 			user.addPhoto(photo);
 		} else {
 
@@ -396,17 +396,17 @@ public class Client implements IClient
 
 		return photosSubset;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<Photo> getPhotosByTag(List<String> tokens) {
-		
+
 		ArrayList<Tag> tags = new ArrayList<Tag>();
 		Tag tag = null;
-		
+
 		for (int i = 1; i < tokens.size(); ) {
-			
+
 			switch(tokens.get(i)) {
 			case "Location:":
 				tag = new Tag(Tag.LOCATION, tokens.get(i + 1));
@@ -424,7 +424,7 @@ public class Client implements IClient
 				i+=2;
 				break;
 			default:
-				
+
 				if (tokens.get(i).charAt(tokens.get(i).length() - 1) == ':') {
 					//entered a bad tag type.
 					tag = new Tag(-1, tokens.get(i));
@@ -439,39 +439,39 @@ public class Client implements IClient
 				break;
 			}
 		}
-		
+
 		ArrayList<Photo> allPhotos = backendInterface.getUser(id).getPhotos();
 		ArrayList<Photo> tagPhotos = new ArrayList<Photo>();
-		
-		
+
+
 		for (Photo photo : allPhotos) {
-			
+
 			boolean add = true;
-		
+
 			for (Tag t : tags) {
-				
+
 				if (!photo.hasTag(t)) {
 					add = false;
 				}
 			}
-			
+
 			if (add) {
 				tagPhotos.add(photo);
 			}
 		}
 		return tagPhotos;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean renameAlbum(String oldName, String newName) {
-		
+
 		return backendInterface.getUser(id).renameAlbum(oldName, newName);
-		
+
 	}
-	
-	
+
+
 	/**
 	 * 
 	 */

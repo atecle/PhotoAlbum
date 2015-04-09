@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -15,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.model.Album;
+import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.User;
 import cs213.photoAlbum.util.Helper;
 
@@ -64,12 +67,11 @@ public class CollectionView extends JFrame {
 	public CollectionView(User u, Client c) {
 
 		super(u.getName() + "'s Collection");
-		setSize(800,600);
+		setSize(600,400);
 
 		this.user = u;
 		this.client = c;
-		contentPane = new JPanel();
-		contentPane.setLayout(new BorderLayout());
+		contentPane = new JPanel(new BorderLayout());
 
 		this.albums = user.getAlbums();
 
@@ -86,6 +88,7 @@ public class CollectionView extends JFrame {
 			String endDate = Helper.formatDate(album.getEndDate());
 			endDate = endDate.compareTo("No date") == 0 ? "No end date" : endDate.substring(0, endDate.indexOf("-"));
 			data[i][1] = startDate + " - " + endDate;
+		
 			data[i][2] = album.getSize() + "";
 		}
 
@@ -126,7 +129,25 @@ public class CollectionView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
+				final int row = table.getSelectedRow();
+				if (row == -1) return;
+				
+				final String albumName = (String) table.getValueAt(row, 0);
+				AlbumView albumView = new AlbumView(client, albumName);
+				albumView.setLocationRelativeTo(null);
+				albumView.setVisible(true);
+				setVisible(false);
+				albumView.addWindowListener(new WindowAdapter() {
 
+					public void windowClosing(WindowEvent e) {
+						
+						client.writeUsers();
+						int newSize = client.getUser().getAlbum(albumName).getSize();
+						table.setValueAt(newSize, row, 2);
+						setVisible(true);
+					}
+				});
+				
 			}
 		});
 

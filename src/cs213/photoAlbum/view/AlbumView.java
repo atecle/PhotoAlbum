@@ -1,27 +1,204 @@
 package cs213.photoAlbum.view;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import cs213.photoAlbum.control.Client;
+import cs213.photoAlbum.model.Photo;
 
 public class AlbumView extends JFrame {
 
-	private JPanel contentPane;
-	
+	private JPanel contentPane, buttonPanel;
+
 	private JButton addButton, removeButton, 
-					recaptionButton, openButton, 
-					addTagButton, removeTagButton;
-	
+	recaptionButton, openButton, 
+	addTagButton, removeTagButton;
+
+	private JScrollPane scrollPane;
+
+	private JList<Photo> photoList;
+
+	private DefaultListModel<Photo> listModel;
+
 	private PhotoDisplayView photoView;
-	
+
 	private Client client;
-	
-	public AlbumView() {
-		
+
+	public AlbumView(Client c, final String albumName) {
+
+		super(c.getUser() +  "'s " + albumName);
+		setSize(600, 400);
+		this.client = c;
+
+		photoList = new JList<Photo>();
+		listModel = new DefaultListModel<Photo>();
+		IconListCellRenderer renderer = new IconListCellRenderer();
+
+
+		for (Photo photo : client.getUser().getAlbum(albumName).getPhotos()) {
+			listModel.addElement(photo);
+		}
+
+		photoList = new JList<Photo>(listModel);
+		photoList.setCellRenderer(renderer);
+		photoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane = new JScrollPane(photoList);
+
+		addButton = new JButton("Add Photo");
+
+		addButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				//strange behavior here. files are only filtered after I select Image Files in the combo box. 
+				JFileChooser fc = new JFileChooser();
+				FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
+				fc.setFileFilter(imageFilter);
+				fc.addChoosableFileFilter(imageFilter);
+				fc.setAcceptAllFileFilterUsed(false);
+				int returnVal = fc.showOpenDialog(null);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+					File file = fc.getSelectedFile();
+
+					if (!isImage(file))  {
+						//wish file chooser just actually 
+						JOptionPane.showMessageDialog(null, "Invalid file type.", "Error", JOptionPane.ERROR_MESSAGE);
+
+						return;
+					
+					}
+					
+					
+					String filePath = null;
+					boolean addSuccess = false;
+					try {
+						addSuccess = client.addPhoto((filePath = file.getCanonicalPath()), " ---- ", albumName);
+					} catch (IOException e2) {
+						return;
+					}
+
+					if (!addSuccess) {
+						JOptionPane.showMessageDialog(null, "Album already contains this photo", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+
+					Photo newPhoto = client.getPhoto(filePath);
+					listModel.addElement(newPhoto);
+				}
+
+				return;
+			}
+		});
+
+		removeButton = new JButton("Remove Photo");
+		removeButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				Photo p = photoList.getSelectedValue();
+
+				if (p == null) return;
+
+				client.removePhoto(p.getName(), albumName);
+
+				listModel.removeElement(p);
+
+			}
+		});
+
+		recaptionButton = new JButton("Recaption Photo");
+		recaptionButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+
+		addTagButton = new JButton("Add Tag");
+		addTagButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+
+		removeTagButton = new JButton("Remove Tag");		
+		removeTagButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+		openButton = new JButton("Open");
+		openButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				final PhotoDisplayView photoView = new PhotoDisplayView(client);
+			}
+		});
+
+		contentPane = new JPanel(new BorderLayout());
+		contentPane.add(scrollPane, BorderLayout.CENTER);
+
+		buttonPanel = new JPanel(new FlowLayout());
+		buttonPanel.add(addButton);
+		buttonPanel.add(removeButton);
+		buttonPanel.add(addTagButton);
+		buttonPanel.add(removeTagButton);
+		buttonPanel.add(openButton);
+
+		contentPane.add(buttonPanel, BorderLayout.PAGE_END);
+
+		add(contentPane);
+
 	}
-	
-	
-	
+
+	private static boolean isImage(File file) {
+
+		String fileName = file.getName();
+		String ext = null;
+
+		if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+			ext = fileName.substring(fileName.lastIndexOf(".")+1);
+		else ext = "";
+
+		String [] exts = ImageIO.getReaderFileSuffixes();
+		for (String s : exts) {
+			if (s.compareTo(ext) == 0) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
 }
