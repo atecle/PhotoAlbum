@@ -46,6 +46,7 @@ public class AlbumView extends JFrame {
 
 		super(c.getUser() +  "'s " + albumName);
 		setSize(700, 400);
+		setResizable(false);
 		this.client = c;
 
 		photoList = new JList<Photo>();
@@ -212,7 +213,23 @@ public class AlbumView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				final PhotoDisplayView photoView = new PhotoDisplayView(client);
+				Photo p = photoList.getSelectedValue();
+				if (p == null) return;
+				
+				final PhotoDisplayView photoView = new PhotoDisplayView(client, listModel, p.getName());
+				
+				photoView.setLocationRelativeTo(null);
+				photoView.setVisible(true);
+				setVisible(false);
+				photoView.addWindowListener(new WindowAdapter() {
+					
+					public void windowClosing(WindowEvent e) {
+						
+						setVisible(true);
+					}
+				});
+				
+				
 			}
 		});
 

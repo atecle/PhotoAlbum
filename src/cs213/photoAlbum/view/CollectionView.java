@@ -68,6 +68,7 @@ public class CollectionView extends JFrame {
 
 		super(u.getName() + "'s Collection");
 		setSize(600,400);
+		setResizable(false);
 
 		this.user = u;
 		this.client = c;

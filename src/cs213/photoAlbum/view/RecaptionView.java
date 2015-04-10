@@ -29,6 +29,7 @@ public class RecaptionView extends JFrame {
 		super("Recaption Photo");
 		this.client = c;
 		setSize(300, 230);
+		setResizable(false);
 		
 		contentPane = new JPanel(new FlowLayout());
 		saveButton = new JButton("Save");

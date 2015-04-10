@@ -4,3 +4,4 @@ bin/*
 *.project
 .hg*
 *.class
+*.DS_Store

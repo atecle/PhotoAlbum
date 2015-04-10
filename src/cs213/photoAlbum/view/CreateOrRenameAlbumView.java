@@ -62,6 +62,7 @@ public class CreateOrRenameAlbumView extends JFrame {
 		this.client = c;
 		this.listModel = mod;
 		setSize(new Dimension(300, 120));
+		setResizable(false);
 
 		contentPane = new JPanel(new FlowLayout());
 		albumNameLabel = new JLabel("Album Name: ");

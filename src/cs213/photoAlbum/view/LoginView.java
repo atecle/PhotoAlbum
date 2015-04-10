@@ -62,7 +62,7 @@ public class LoginView extends JFrame {
 		super("Login");
 
 		setSize(300, 250);
-		setResizable(true);
+		setResizable(false);
 		this.client = c;
 
 		usersList = new JComboBox<User>();

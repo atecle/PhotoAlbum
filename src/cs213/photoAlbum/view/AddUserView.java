@@ -63,7 +63,7 @@ public class AddUserView extends JFrame
 		this.client = c;
 		this.listModel = m;
 		setSize(300,230);
-
+		setResizable(false);
 
 		addButton = new JButton("Add User");
 		addButton.setAlignmentX(JButton.CENTER_ALIGNMENT);

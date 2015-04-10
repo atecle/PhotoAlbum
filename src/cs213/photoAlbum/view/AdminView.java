@@ -59,6 +59,8 @@ public class AdminView extends JFrame
 
 		super("Administrative View");
 		setSize(600,400);
+		setResizable(false);
+
 		this.client = c;
 		
 		listModel = new DefaultListModel<User>();

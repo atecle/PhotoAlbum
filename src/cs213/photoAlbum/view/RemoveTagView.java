@@ -37,6 +37,9 @@ public class RemoveTagView extends JFrame {
 		super("Remove Tag");
 		
 		setSize(300, 200);
+		setResizable(false);
+		setResizable(false);
+
 		
 		this.client = c;
 		

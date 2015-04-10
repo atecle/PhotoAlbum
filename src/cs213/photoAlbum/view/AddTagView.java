@@ -39,7 +39,8 @@ public class AddTagView extends JFrame {
 		this.client = c;
 		
 		setSize(300, 150);
-		
+		setResizable(false);
+
 		group = new ButtonGroup();
 
 		locButton = new JRadioButton();

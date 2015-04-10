@@ -261,6 +261,13 @@ public class Photo implements Serializable {
 		return thumbnail;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public File getFile() {
+		return file;
+	}
 
 
 }
