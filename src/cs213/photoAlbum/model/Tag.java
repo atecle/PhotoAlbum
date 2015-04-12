@@ -127,5 +127,19 @@ public class Tag implements Serializable {
 		
 		return retVal;
 	}
+	
+	public String getTypeAsString() {
+	
+		switch(type) {
+		case KEYWORD:
+			return "Keyword";
+		case LOCATION:
+			return "Location";
+		case PERSON:
+			return "Person";
+		default:
+			return "";
+		}
+	}
 
 }

@@ -82,6 +82,13 @@ public class User implements Serializable {
 	public boolean deleteAlbum(String name) {
 
 		if (albums.containsKey(name)) {
+			Album album = albums.get(name);
+			for (Photo p : album.getPhotos()) {
+				p.removeFromAlbum(name);
+				if (p.getAlbumNames().size() == 0) {
+					deletePhoto(p.getName());
+				}
+			}
 			albums.remove(name);
 			return true;
 		}
@@ -101,6 +108,10 @@ public class User implements Serializable {
 			Album album = albums.remove(oldName);
 			album.setName(newName);
 			albums.put(newName, album);
+			for (Photo p : album.getPhotos()){
+				p.removeFromAlbum(oldName);
+				p.addtoAlbum(newName);
+			}
 			return true;
 		}
 

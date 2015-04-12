@@ -1,5 +1,8 @@
 package cs213.photoAlbum.app;
 
+/**
+ * This class is the main launch of the application
+ */
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -29,7 +32,10 @@ public class PhotoAlbumApp {
 	}
 }
 
-
+/**
+ * 
+ *
+ */
 class ShutdownHook {
 	
 	private Client client;

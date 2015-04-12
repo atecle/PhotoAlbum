@@ -119,7 +119,7 @@ public class AddTagView extends JFrame {
 					p.addTag(t);
 				}
 
-				client.writeUsers();
+				//client.writeUsers();
 				dispose();
 			}
 		});

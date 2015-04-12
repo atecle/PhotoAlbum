@@ -24,6 +24,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.model.Photo;
 
+/**
+ * 
+ * This class is responsible for the display and the functionality on the AlbumView window.
+ * A list of a user's photo by thumbnail image are displayed. The functions for adding a photo,
+ * removing a photo, recaptioning a photo, opening a photo, adding a tag and removing a tag are
+ * available.
+ *
+ */
 public class AlbumView extends JFrame {
 
 	private JPanel contentPane, buttonPanel;
@@ -41,6 +49,13 @@ public class AlbumView extends JFrame {
 	private PhotoDisplayView photoView;
 
 	private Client client;
+	
+	/**
+	 * Class constructor which creates the frame of the AdminView Window
+	 * 
+	 * @param c  Allows access to the stored data
+	 * @param albumName The name of the album
+	 */
 
 	public AlbumView(Client c, final String albumName) {
 
@@ -122,8 +137,12 @@ public class AlbumView extends JFrame {
 
 				if (p == null) return;
 
-				listModel.removeElement(p);
-
+				System.out.println(listModel.removeElement(p));
+				System.out.println(p.removeFromAlbum(albumName));
+				client.getUser().deletePhoto(p.getName());
+				client.getUser().getAlbum(albumName).deletePhoto(p.getName());
+				//client.writeUsers();
+				
 			}
 		});
 
@@ -144,7 +163,7 @@ public class AlbumView extends JFrame {
 
 					public void windowClosing(WindowEvent e) {
 
-						client.writeUsers();
+						//client.writeUsers();
 					}
 				});
 
@@ -172,7 +191,7 @@ public class AlbumView extends JFrame {
 					
 					public void windowClosing(WindowEvent e) {
 						
-						client.writeUsers();
+						//client.writeUsers();
 						
 					}
 					
@@ -200,7 +219,7 @@ public class AlbumView extends JFrame {
 					
 					public void windowClosing(WindowEvent e) {
 						
-						client.writeUsers();
+						//client.writeUsers();
 					}
 				});
 				
@@ -250,6 +269,13 @@ public class AlbumView extends JFrame {
 		setContentPane(contentPane);
 
 	}
+	
+	/**
+	 * Checks if a file is an image file
+	 * 
+	 * @param file The file being checked if it's an image file
+	 * @return true if an image file, false otherwise
+	 */
 
 	private static boolean isImage(File file) {
 
@@ -262,7 +288,7 @@ public class AlbumView extends JFrame {
 
 		String [] exts = ImageIO.getReaderFileSuffixes();
 		for (String s : exts) {
-			if (s.compareTo(ext) == 0) {
+			if (s.compareToIgnoreCase(ext) == 0) {
 				return true;
 			}
 		}

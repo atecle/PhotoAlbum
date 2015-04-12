@@ -3,8 +3,11 @@ package cs213.photoAlbum.model;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import cs213.photoAlbum.util.Helper;
 
@@ -21,16 +24,16 @@ public class Album implements Serializable {
 
 	/** A unique album name per user */
 	private String name;
-	
+
 	/**Start date of an album */
 	private Date start;
-	
+
 	/**End date of an album */
 	private Date end;
-	
+
 	/** Hashmap storing photos in this album, keyed by unique filename */
 	private HashMap<String, Photo> photos;
-	
+
 	/** 
 	 * Constructs an Album with the album's name
 	 * 
@@ -40,41 +43,41 @@ public class Album implements Serializable {
 		this.name = name;
 		photos = new HashMap<String, Photo>();
 	}
-	
+
 	/** 
 	 * Adds a photo to the album
 	 * 
 	 * @param photo Passed in photo object
 	 */
 	public void addPhoto(Photo photo) {
-		
+
 		setStartandEnd(photo.getDate().getTime());
 		photos.put(photo.getName(), photo);
 	}
-	
-    /**
-     * Returns the name of the photo
-     * 
-     * @param filename String name is set to the name variable passed in
-     * @return Name of the photo
-     */
+
+	/**
+	 * Returns the name of the photo
+	 * 
+	 * @param filename String name is set to the name variable passed in
+	 * @return Name of the photo
+	 */
 	public Photo getPhoto(String filename) 
 	{
 		String canonicalPath = null;
-		
+
 		try {
 			canonicalPath = Helper.getCanonicalPath(filename);
 		} catch (IOException e) {
-			
+
 			System.err.println("Error: IOException getting canonical path from " + filename);
 		}
-		
+
 		if (canonicalPath == null) return null;
-		
+
 		return photos.get(canonicalPath);
 	}
-	
-	
+
+
 	/**
 	 * Returns the name of the album
 	 * 
@@ -83,7 +86,7 @@ public class Album implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * Sets the name of the album 
 	 * 
@@ -100,7 +103,7 @@ public class Album implements Serializable {
 	public int getSize() {
 		return photos.size();
 	}
-		
+
 	/**
 	 * Returns list of photos in the album
 	 * 
@@ -109,7 +112,7 @@ public class Album implements Serializable {
 	public ArrayList<Photo> getPhotos() {
 		return new ArrayList<Photo>(photos.values());
 	}
-	
+
 	/**
 	 * Deletes a photo from an album.
 	 * 
@@ -117,24 +120,60 @@ public class Album implements Serializable {
 	 * @return True if filename removed, false otherwise
 	 */
 	public boolean deletePhoto(String filename) {
-		
+
 		String canonicalPath = null;
 		try {
-			
+
 			canonicalPath = Helper.getCanonicalPath(filename);
 		} catch (IOException e) {
 			System.err.println("Error: IOException getting canonical path from " + filename);
 		}
-		
-		if (canonicalPath == null) return false;
-		
-		if (!photos.containsKey(canonicalPath)) 
+
+		if (canonicalPath == null)  {
+			System.out.println("test");
+
 			return false;
+		}
 		
-		photos.remove(canonicalPath);
-			return true;
+		Photo p = photos.remove(canonicalPath);
+		if (photos.size() == 0) {
+			start = null;
+			end = null;
+			
+		} else {
+			if (p.getDate().getTime().equals(start)) {
+				if (photos.size() == 1) {
+					
+					start = end;
+				} 
+				else {
+					//find the next earliest date
+					Collection<Photo> values = photos.values();
+					List<Photo> list = new ArrayList<Photo>(values);
+					Collections.sort(list);
+					start = list.get(list.size() - 1).getDate().getTime();
+					
+					
+				}
+				
+			} else if (p.getDate().getTime().equals(end)) {
+				
+				if (photos.size() == 1) {
+					end = start;
+				} 
+				else {
+					Collection<Photo> values = photos.values();
+					List<Photo> list = new ArrayList<Photo>(values);
+					Collections.sort(list);
+					end = list.get(0).getDate().getTime();					
+				}
+				
+			}
+		}
+		
+		return true;
 	}
-	
+
 	/**
 	 * Sets the start date and end date for album.
 	 * 
@@ -142,20 +181,20 @@ public class Album implements Serializable {
 	 * @return  If start and end dates are null, the start and end are set to the date passed in. 
 	 */
 	private void setStartandEnd(Date date) {
-		
+
 		if (start == null && end == null) {
 			start = date;
 			end = date;
 			return;
 		}
-		
+
 		if (date.before(start)) 
 			start = date;
 		if (date.after(end)) 
 			end = date;
 	}
-	
-	
+
+
 	/**
 	 * Gets the date of earliest photo in this album
 	 * 
@@ -164,7 +203,7 @@ public class Album implements Serializable {
 	public Date getStartDate() {
 		return start;
 	}
-	
+
 	/**
 	 * Gets date of latest photo in this album
 	 * 
@@ -173,7 +212,7 @@ public class Album implements Serializable {
 	public Date getEndDate() {
 		return end;
 	}
-	
+
 	/**
 	 * Checks if photo is contained in album
 	 * 
@@ -181,19 +220,19 @@ public class Album implements Serializable {
 	 * @return True if album contains photo.
 	 */
 	public boolean containsPhoto(String filename) {
-		
+
 		String canonicalPath = null;
-		
+
 		try {
-			
+
 			canonicalPath = Helper.getCanonicalPath(filename);
 		} catch (IOException e) {
 			System.err.println("Error: IOException getting canonical path from " + filename);
 		}
-		
+
 		if (canonicalPath == null) return false;
-		
-		
+
+
 		return photos.containsKey(canonicalPath);
 	}
 }

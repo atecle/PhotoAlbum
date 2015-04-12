@@ -50,7 +50,6 @@ public class AdminView extends JFrame
 	/**
 	 * Class constructor which creates the frame of the LoginView Window
 	 * 
-	 * @param pageHead Title of the AdminView Window
 	 * @param c  Allows access to the stored data 
 	 */
 

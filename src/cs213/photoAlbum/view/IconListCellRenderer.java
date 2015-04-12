@@ -1,6 +1,7 @@
 package cs213.photoAlbum.view;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Component;
 
@@ -12,19 +13,29 @@ import javax.swing.ListCellRenderer;
 
 import cs213.photoAlbum.model.Photo;
 
+/**
+ *
+ */
+
 public class IconListCellRenderer extends JLabel implements ListCellRenderer {
 
 
+	/**Universal version identifier for a Serializable class.*/
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 
 	public IconListCellRenderer() {
 		
 		setOpaque(true);
 		setHorizontalAlignment(JLabel.LEFT);
 	}
+	
+	/**
+	 * 
+	 */
 	
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

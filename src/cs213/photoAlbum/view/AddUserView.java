@@ -54,7 +54,7 @@ public class AddUserView extends JFrame
 	/**
 	 * Class constructor which creates the frame of the AddUserView Window
 	 * 
-	 * @param pageHead Title of the AdminView Window
+	 * @param m needed for the listModel feature
 	 * @param c  Allows access to the stored data 
 	 */
 	public AddUserView(Client c, DefaultListModel<User> m)

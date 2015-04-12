@@ -16,6 +16,11 @@ import javax.swing.table.DefaultTableModel;
 import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.model.Tag;
 
+/**
+ * This class is responsible for the display and the functionality on the RemoveTagView window. 
+ * A user can delete a currently existing tag that exists under a specific photo.
+ *
+ */
 public class RemoveTagView extends JFrame {
 
 	private JPanel contentPane, buttonPane;
@@ -32,6 +37,12 @@ public class RemoveTagView extends JFrame {
 	
 	private ArrayList<Tag> tags;
 	
+	/**
+	 * Class constructor which creates the frame of the RemoveTagView window
+	 * 
+	 * @param c  Allows access to the stored data
+	 * @param photoName The name of the photo
+	 */
 	public RemoveTagView(Client c, final String photoName) {
 		
 		super("Remove Tag");
@@ -97,7 +108,7 @@ public class RemoveTagView extends JFrame {
 				
 				client.getPhoto(photoName).removeTag(t);
 				listModel.removeRow(index);
-				client.writeUsers();
+				//client.writeUsers();
 
 			}
 		});

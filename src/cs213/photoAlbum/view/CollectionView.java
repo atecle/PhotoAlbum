@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -17,7 +18,6 @@ import javax.swing.table.DefaultTableModel;
 
 import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.model.Album;
-import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.User;
 import cs213.photoAlbum.util.Helper;
 
@@ -29,7 +29,7 @@ import cs213.photoAlbum.util.Helper;
  *
  */
 public class CollectionView extends JFrame {
-	
+
 	/**Universal version identifier for a Serializable class.*/
 	private static final long serialVersionUID = 1L;
 
@@ -57,12 +57,12 @@ public class CollectionView extends JFrame {
 	/**Search, Open, Rename, Delete and Create buttons*/
 	private JButton searchButton, openButton, renameButton, deleteButton, createButton;
 
-/**
- * Class constructor which creates the frame of the CollectionView Window
- * 
- * @param u Allows access to the logged in user's information
- * @param c Allows access to the stored data in Client
- */
+	/**
+	 * Class constructor which creates the frame of the CollectionView Window
+	 * 
+	 * @param u Allows access to the logged in user's information
+	 * @param c Allows access to the stored data in Client
+	 */
 	@SuppressWarnings("serial")
 	public CollectionView(User u, Client c) {
 
@@ -89,11 +89,11 @@ public class CollectionView extends JFrame {
 			String endDate = Helper.formatDate(album.getEndDate());
 			endDate = endDate.compareTo("No date") == 0 ? "No end date" : endDate.substring(0, endDate.indexOf("-"));
 			data[i][1] = startDate + " - " + endDate;
-		
+
 			data[i][2] = album.getSize() + "";
 		}
 
-		 listModel = new DefaultTableModel(data, colNames)
+		listModel = new DefaultTableModel(data, colNames)
 		{
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -123,7 +123,7 @@ public class CollectionView extends JFrame {
 
 				final int row = table.getSelectedRow();
 				if (row == -1) return;
-				
+
 				final String albumName = (String) table.getValueAt(row, 0);
 				AlbumView albumView = new AlbumView(client, albumName);
 				albumView.setLocationRelativeTo(null);
@@ -132,8 +132,8 @@ public class CollectionView extends JFrame {
 				albumView.addWindowListener(new WindowAdapter() {
 
 					public void windowClosing(WindowEvent e) {
-						
-						client.writeUsers();
+
+						//client.writeUsers();
 						int newSize = client.getUser().getAlbum(albumName).getSize();
 						table.setValueAt(newSize, row, 2);
 						String newStart = Helper.formatDate(client.getUser().getAlbum(albumName).getStartDate());
@@ -144,7 +144,7 @@ public class CollectionView extends JFrame {
 						setVisible(true);
 					}
 				});
-				
+
 			}
 		});
 
@@ -155,7 +155,7 @@ public class CollectionView extends JFrame {
 
 				int row = table.getSelectedRow();
 				if (row == -1) return;
-				
+
 				String oldName = (String) table.getValueAt(row, 0);
 				CreateOrRenameAlbumView crav = 
 						new CreateOrRenameAlbumView(client, listModel, "Rename Album", false, oldName, row);
@@ -171,18 +171,25 @@ public class CollectionView extends JFrame {
 
 				int index = table.getSelectedRow();
 				if (index == -1) return;
+				int selectedOption = JOptionPane.showConfirmDialog(null, 
+						"Are you sure?", 
+						"Choose", 
+						JOptionPane.YES_NO_OPTION); 
+				if (selectedOption == JOptionPane.NO_OPTION) {
+					return;
+				}
 				String name = user.getAlbums().get(index).getName();
 				client.deleteAlbum(name);
 				((DefaultTableModel) table.getModel()).removeRow(index);
 			}
 		});
-	
+
 
 		createButton = new JButton("Create");
 		createButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				CreateOrRenameAlbumView crav = new CreateOrRenameAlbumView(client, listModel, "Create Album", true, "", -1);
 				crav.setLocationRelativeTo(null);
 				crav.setVisible(true);

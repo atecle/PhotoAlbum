@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
  * Implements Serializable, converting an instance Photo object into a sequence of bytes.
  *
  */
-public class Photo implements Serializable {
+public class Photo implements Serializable, Comparable<Photo> {
 
 	/** Universal version identifier for a Serializable class.*/
 	private static final long serialVersionUID = 1L;
@@ -206,14 +206,17 @@ public class Photo implements Serializable {
 	public void addtoAlbum(String albumName) {
 		albumNames.add(albumName);
 	}
+	
 
 	/**
 	 * Called when this photo is removed from album, method is used for book keeping.
 	 * 
 	 * @param albumName Name of the album
+	 * @return boolean if album was deleted
 	 */
-	public void removeFromAlbum(String albumName) {
-		albumNames.remove(albumName);
+	public boolean removeFromAlbum(String albumName) {
+	
+		return albumNames.remove(albumName);
 	}
 
 	/**
@@ -244,7 +247,8 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * 
+	 * Returns an image icon 
+	 * @return ImageIcon object of image file. If thumbnail is null, returns a default blank photo icon 
 	 */
 	public ImageIcon getThumbnail() {
 
@@ -262,12 +266,15 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Get file object associated with this Photo object
+	 * @return file object
 	 */
 	public File getFile() {
 		return file;
 	}
-
-
+	
+	@Override
+	public int compareTo(Photo o) {
+		return o.getDate().compareTo(this.getDate());
+	}
 }

@@ -202,8 +202,22 @@ public class Client implements IClient
 		} else {
 
 			photo = user.getPhoto(canonicalPath);
-			if (caption.trim().length() != 0) {
-				photo.setCaption(caption);
+			if (photo == null) {
+				System.out.println("test");
+				try {
+					canonicalPath = file.getCanonicalPath();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				photo = new Photo(canonicalPath, caption);
+
+				user.addPhoto(photo);
+			}
+			else {
+				if (caption.trim().length() != 0) {
+					photo.setCaption(caption);
+				}
 			}
 		}
 
@@ -279,6 +293,16 @@ public class Client implements IClient
 		}
 
 		return true;
+	}
+
+	/**
+	 * 
+	 */
+	public boolean removePhotoFromAlbum(String photoName, String albumName) {
+
+		Photo photo = backendInterface.getUser(id).getPhoto(photoName);
+
+		return photo.removeFromAlbum(albumName);
 	}
 
 	/**
@@ -478,5 +502,6 @@ public class Client implements IClient
 	public boolean checkPassword(String pw, String id) {
 		return backendInterface.checkPassword(pw, id);
 	}
+
 
 }

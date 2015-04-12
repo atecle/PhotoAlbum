@@ -12,6 +12,11 @@ import javax.swing.JTextField;
 
 import cs213.photoAlbum.control.Client;
 
+/**
+ * This class is responsible for the display and the functionality on the RecaptionView window. 
+ * The user can recaption a specific photo, specifying it with a new tag value and corresponding tag type.
+ *
+ */
 public class RecaptionView extends JFrame {
 
 	private JPanel contentPane;
@@ -23,6 +28,13 @@ public class RecaptionView extends JFrame {
 	private JTextField captionField;
 	
 	private Client client;
+	
+	/**
+	 * Class constructor which creates the frame of the RecaptionView window
+	 * 
+	 * @param c  Allows access to the stored data
+	 * @param photoName The name of the photo
+	 */
 	
 	public RecaptionView(Client c, final String photoName) {
 		
