@@ -138,6 +138,14 @@ public class AlbumView extends JFrame {
 				Photo p = photoList.getSelectedValue();
 
 				if (p == null) return;
+				
+				int selectedOption = JOptionPane.showConfirmDialog(null, 
+						"Are you sure?", 
+						"Choose", 
+						JOptionPane.YES_NO_OPTION); 
+				if (selectedOption == JOptionPane.NO_OPTION) {
+					return;
+				}
 
 				listModel.removeElement(p);
 				p.removeFromAlbum(albumName);
@@ -159,6 +167,19 @@ public class AlbumView extends JFrame {
 				
 				if (p == null) return;
 				
+				final MoveView moveView = new MoveView(client, listModel, albumName, p);
+				
+				moveView.setLocationRelativeTo(null);
+				moveView.setVisible(true);
+				
+				moveView.addWindowListener(new WindowAdapter() {
+
+					public void windowClosing(WindowEvent e) {
+						
+						moveView.dispose();
+					}
+				});
+				
 				
 			}
 		});
@@ -172,20 +193,18 @@ public class AlbumView extends JFrame {
 				Photo p = photoList.getSelectedValue();
 				if (p == null) return;
 
-				RecaptionView recapView = new RecaptionView(client, p.getName());
+				final RecaptionView recapView = new RecaptionView(client, p.getName());
 
 				recapView.setLocationRelativeTo(null);
 				recapView.setVisible(true);
 				recapView.addWindowListener(new WindowAdapter() {
 
 					public void windowClosing(WindowEvent e) {
-
-						//client.writeUsers();
+						
+						recapView.dispose();
 					}
 				});
-
-
-
+				
 			}
 		});
 
@@ -204,15 +223,7 @@ public class AlbumView extends JFrame {
 				addTagView.setLocationRelativeTo(null);
 				addTagView.setVisible(true);
 
-				addTagView.addWindowListener(new WindowAdapter() {
-
-					public void windowClosing(WindowEvent e) {
-
-						//client.writeUsers();
-
-					}
-
-				});
+				addTagView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}
 		});
 
@@ -226,19 +237,25 @@ public class AlbumView extends JFrame {
 				Photo p = photoList.getSelectedValue();
 
 				if (p == null) return;
+				
+			
 
-				RemoveTagView rmTagView = new RemoveTagView(client, p.getName());
+				final RemoveTagView rmTagView = new RemoveTagView(client, p.getName());
 
+								
 				rmTagView.setLocationRelativeTo(null);
 				rmTagView.setVisible(true);
+				
+			
 
 				rmTagView.addWindowListener(new WindowAdapter() {
 
 					public void windowClosing(WindowEvent e) {
-
-						//client.writeUsers();
+						
+						rmTagView.dispose();
 					}
 				});
+				
 
 			}
 		});
@@ -276,6 +293,7 @@ public class AlbumView extends JFrame {
 		buttonPanel.add(openButton);
 		buttonPanel.add(addButton);
 		buttonPanel.add(removeButton);
+		buttonPanel.add(moveButton);
 		buttonPanel.add(addTagButton);
 		buttonPanel.add(removeTagButton);
 		buttonPanel.add(recaptionButton);

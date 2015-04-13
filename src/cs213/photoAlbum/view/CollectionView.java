@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import cs213.photoAlbum.control.Client;
@@ -102,6 +103,7 @@ public class CollectionView extends JFrame {
 		};
 
 		table = new JTable(listModel);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 
@@ -115,13 +117,39 @@ public class CollectionView extends JFrame {
 				setVisible(false);
 				searchView.setLocationRelativeTo(null);
 				searchView.setVisible(true);
-			
-				
+
+
 				searchView.addWindowListener(new WindowAdapter() {
 
 					public void windowClosing(WindowEvent e) {
 
-						setVisible(true);
+						String[] colNames = {"Album", "Date Range", "Number of Photos"};
+
+						String[][] data = new String[client.getUser().getAlbums().size()][3];
+						
+						for (int i = 0; i < albums.size(); i++) {
+
+							Album album = albums.get(i);
+							data[i][0] = album.getName();
+							String startDate = Helper.formatDate(album.getStartDate());
+							startDate = startDate.compareTo("No date") == 0 ? "No start date" : startDate.substring(0, startDate.indexOf("-"));
+							String endDate = Helper.formatDate(album.getEndDate());
+							endDate = endDate.compareTo("No date") == 0 ? "No end date" : endDate.substring(0, endDate.indexOf("-"));
+							data[i][1] = startDate + " - " + endDate;
+
+							data[i][2] = album.getSize() + "";
+						}
+
+						listModel = new DefaultTableModel(data, colNames)
+						{
+							@Override
+							public boolean isCellEditable(int row, int column) {
+								return false;
+							}
+						};
+
+						table.setModel(listModel);
+						setVisible(true);						
 					}
 				});
 
@@ -145,14 +173,18 @@ public class CollectionView extends JFrame {
 
 					public void windowClosing(WindowEvent e) {
 
-						//client.writeUsers();
-						int newSize = client.getUser().getAlbum(albumName).getSize();
-						table.setValueAt(newSize, row, 2);
-						String newStart = Helper.formatDate(client.getUser().getAlbum(albumName).getStartDate());
-						newStart = newStart.compareTo("No date") == 0 ? "No start date" : newStart.substring(0, newStart.indexOf("-"));
-						String newEnd = Helper.formatDate(client.getUser().getAlbum(albumName).getEndDate());
-						newEnd = newEnd.compareTo("No date") == 0 ? "No end date" : newEnd.substring(0, newEnd.indexOf("-"));
-						table.setValueAt(newStart + " - " + newEnd, row, 1);
+						for (int i = 0; i < listModel.getRowCount(); i++) {
+							
+							String name = (String) listModel.getValueAt(i, 0);
+							int newSize = client.getUser().getAlbum(name).getSize();
+							table.setValueAt(newSize, i, 2);
+							String newStart = Helper.formatDate(client.getUser().getAlbum(name).getStartDate());
+							newStart = newStart.compareTo("No date") == 0 ? "No start date" : newStart.substring(0, newStart.indexOf("-"));
+							String newEnd = Helper.formatDate(client.getUser().getAlbum(name).getEndDate());
+							newEnd = newEnd.compareTo("No date") == 0 ? "No end date" : newEnd.substring(0, newEnd.indexOf("-"));
+							table.setValueAt(newStart + " - " + newEnd, i, 1);
+							
+						}
 						setVisible(true);
 					}
 				});

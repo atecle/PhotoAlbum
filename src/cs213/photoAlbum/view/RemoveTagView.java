@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -105,6 +106,14 @@ public class RemoveTagView extends JFrame {
 				int index = table.getSelectedRow();
 				
 				if (index == -1) return;
+				
+				int selectedOption = JOptionPane.showConfirmDialog(null, 
+						"Are you sure?", 
+						"Choose", 
+						JOptionPane.YES_NO_OPTION); 
+				if (selectedOption == JOptionPane.NO_OPTION) {
+					return;
+				}
 				
 				Tag t = tags.get(index);
 				

@@ -235,4 +235,8 @@ public class Album implements Serializable {
 
 		return photos.containsKey(canonicalPath);
 	}
+	
+	public String toString() {
+		return name;
+	}
 }

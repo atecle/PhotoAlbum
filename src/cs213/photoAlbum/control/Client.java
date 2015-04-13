@@ -406,7 +406,7 @@ public class Client implements IClient
 	/**
 	 *	{@inheritDoc}
 	 */
-	public List<Photo> getPhotosbyDate(Date startDate, Date endDate) {
+	public ArrayList<Photo> getPhotosbyDate(Date startDate, Date endDate) {
 
 		ArrayList<Photo> photos = backendInterface.getUser(id).getPhotos();
 

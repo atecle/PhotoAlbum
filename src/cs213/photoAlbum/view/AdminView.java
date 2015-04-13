@@ -6,11 +6,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -92,6 +94,14 @@ public class AdminView extends JFrame
 				int index = userList.getSelectedIndex();
 				
 				if (index == -1) return;
+				
+				int selectedOption = JOptionPane.showConfirmDialog(null, 
+						"Are you sure?", 
+						"Choose", 
+						JOptionPane.YES_NO_OPTION); 
+				if (selectedOption == JOptionPane.NO_OPTION) {
+					return;
+				}
 				
 				User user = userList.getModel().getElementAt(index);
 				client.deleteUser(user.getID());
