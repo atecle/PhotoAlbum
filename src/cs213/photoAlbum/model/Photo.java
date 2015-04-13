@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.model;
 
 import java.awt.Image;

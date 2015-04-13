@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.model;
 
 import java.io.IOException;
@@ -130,7 +135,6 @@ public class Album implements Serializable {
 		}
 
 		if (canonicalPath == null)  {
-			System.out.println("test");
 
 			return false;
 		}

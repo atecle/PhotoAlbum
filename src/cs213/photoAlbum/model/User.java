@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.model;
 
 import java.io.IOException;
@@ -231,7 +236,7 @@ public class User implements Serializable {
 
 			canonicalPath = Helper.getCanonicalPath(filename);
 		} catch (IOException e) {
-			System.out.println("Error: IOException getting canonical path of " + filename);
+			System.err.println("Error: IOException getting canonical path of " + filename);
 			return null;
 		}
 

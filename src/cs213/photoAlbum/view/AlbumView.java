@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.view;
 
 import java.awt.BorderLayout;
@@ -62,8 +67,8 @@ public class AlbumView extends JFrame {
 	public AlbumView(Client c, final String albumName) {
 
 		super(c.getUser() +  "'s " + albumName);
-		setSize(700, 400);
-		setResizable(false);
+		setSize(800, 400);
+		setResizable(true);
 		this.client = c;
 
 		photoList = new JList<Photo>();
@@ -219,11 +224,17 @@ public class AlbumView extends JFrame {
 
 				if (p == null) return;
 
-				AddTagView addTagView = new AddTagView(client, p.getName());
+				final AddTagView addTagView = new AddTagView(client, p.getName());
 				addTagView.setLocationRelativeTo(null);
 				addTagView.setVisible(true);
 
-				addTagView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				addTagView.addWindowListener(new WindowAdapter() {
+
+					public void windowClosing(WindowEvent e) {
+						
+						addTagView.dispose();
+					}
+				});
 			}
 		});
 

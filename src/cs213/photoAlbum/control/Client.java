@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.control;
 
 import java.io.File;
@@ -157,7 +162,6 @@ public class Client implements IClient
 
 		if (album == null) {
 
-			System.out.println("Album " + albumname + " does not exist.");
 			return null;
 		}
 
@@ -177,13 +181,11 @@ public class Client implements IClient
 
 		if ((album = user.getAlbum(albumName)) == null || !file.exists()) {
 
-			System.out.println("Album " + albumName + " does not exist.");
 			return false;
 		}
 
 		if (album.containsPhoto(filename)) {
 
-			System.out.println("Photo " + filename + " already exists in album " + albumName);
 			return false;
 		}
 
@@ -203,7 +205,7 @@ public class Client implements IClient
 
 			photo = user.getPhoto(canonicalPath);
 			if (photo == null) {
-				System.out.println("test");
+
 				try {
 					canonicalPath = file.getCanonicalPath();
 				} catch (IOException e) {
@@ -243,19 +245,16 @@ public class Client implements IClient
 
 		if ((album = user.getAlbum(oldAlbumName)) == null) {
 
-			System.out.println("Album " + oldAlbumName + " does not exist for user " + id);
 			return false;
 		}
 
 		if ((user.getAlbum(newAlbumName)) == null) {
 
-			System.out.println("Album " + newAlbumName + " does not exist for user " + id);
 			return false;
 		}
 
 		if (!album.containsPhoto(filename)) {
 
-			System.out.println("Photo " + filename + " does not exist in " + oldAlbumName);
 			return false;
 		}
 
@@ -273,13 +272,11 @@ public class Client implements IClient
 
 		if ((album = user.getAlbum(albumName)) == null) {
 
-			System.out.println("Album " + albumName + " does not exist.");
 			return false;
 		}
 
 		if (!album.deletePhoto(filename)) {
 
-			System.out.println("Photo " + filename + " is not in album " + albumName);
 			return false;
 		}
 
@@ -324,7 +321,6 @@ public class Client implements IClient
 			type = Tag.PERSON;
 			break;
 		default: 
-			System.out.println("Tag type " + tagType + " does not exist");
 			return false;
 		}
 
@@ -335,13 +331,11 @@ public class Client implements IClient
 
 		if (photo == null) {
 
-			System.out.println("Photo " + filename + " does not exist for user " + id);
 			return false;
 		}
 
 		if (photo.hasTag(tag)) {
 
-			System.out.println("Tag already exists for " + filename + " " + tagType + ":" + tagValue);
 			return false;
 		}
 
@@ -370,7 +364,6 @@ public class Client implements IClient
 			type = Tag.PERSON;
 			break;
 		default: 
-			System.out.println("Tag type " + tagType + " does not exist");
 			return false;
 		}
 
@@ -380,13 +373,11 @@ public class Client implements IClient
 
 		if (photo == null) {
 
-			System.out.println("Photo " + filename + " does not exist for user " + id);
 			return false;
 		}
 
 		if (!photo.hasTag(tag)) {
 
-			System.out.println("Tag does not exist for " + filename + " " + tagType + ":" + tagValue);
 			return false;
 		}
 
@@ -424,46 +415,9 @@ public class Client implements IClient
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Photo> getPhotosByTag(List<String> tokens) {
+	public ArrayList<Photo> getPhotosByTag(ArrayList<Tag> tags) {
 
-		ArrayList<Tag> tags = new ArrayList<Tag>();
-		Tag tag = null;
-
-		for (int i = 1; i < tokens.size(); ) {
-
-			switch(tokens.get(i)) {
-			case "Location:":
-				tag = new Tag(Tag.LOCATION, tokens.get(i + 1));
-				tags.add(tag);
-				i+=2;
-				break;
-			case "Person:":
-				tag = new Tag(Tag.PERSON, tokens.get(i + 1));
-				tags.add(tag);
-				i+=2;
-				break;
-			case "Keyword:":
-				tag = new Tag(Tag.KEYWORD, tokens.get(i + 1));
-				tags.add(tag);
-				i+=2;
-				break;
-			default:
-
-				if (tokens.get(i).charAt(tokens.get(i).length() - 1) == ':') {
-					//entered a bad tag type.
-					tag = new Tag(-1, tokens.get(i));
-					tags.add(tag);
-					i+=2;
-					break;
-				}
-				//didn't enter a tag type.
-				tag = new Tag(-1, tokens.get(i));
-				tags.add(tag);
-				i++;
-				break;
-			}
-		}
-
+	
 		ArrayList<Photo> allPhotos = backendInterface.getUser(id).getPhotos();
 		ArrayList<Photo> tagPhotos = new ArrayList<Photo>();
 

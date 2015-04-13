@@ -1,3 +1,7 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
 package cs213.photoAlbum.util;
 
 import java.io.File;

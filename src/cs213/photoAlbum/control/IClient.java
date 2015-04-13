@@ -1,9 +1,17 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.control;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import cs213.photoAlbum.model.Album;
 import cs213.photoAlbum.model.Photo;
+import cs213.photoAlbum.model.Tag;
 import cs213.photoAlbum.model.User;
 
 /**
@@ -177,7 +185,7 @@ public interface IClient {
 	 * @param tokens Contains the tag type of photos 
 	 * @return ArrayList of all photo objects having all tags indicated in tokens
 	 */
-	public List<Photo> getPhotosByTag(List<String> tokens);
+	public ArrayList<Photo> getPhotosByTag(ArrayList<Tag> tokens);
 	
 	/**
 	 * Rename an album.

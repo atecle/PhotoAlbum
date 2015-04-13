@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.view;
 
 import java.awt.BorderLayout;
@@ -24,19 +29,26 @@ import cs213.photoAlbum.model.Tag;
  */
 @SuppressWarnings("serial")
 public class RemoveTagView extends JFrame {
-
+	
+	/** To replace default content pane **/
 	private JPanel contentPane, buttonPane;
 	
+	/**Button to remove a tag*/
 	private JButton deleteButton;
 	
+	/**Works with JTable to hold the names of the tags values and tag types*/
 	private DefaultTableModel listModel;
 	
+	/** Table to organize the display of the tags value and corresponding type*/
 	private JTable table;
 	
+	/**Provides a scrollable view for the list of tags*/
 	private JScrollPane scrollPane;
 	
+	/**Client object declaration*/
 	private Client client;
 	
+	/**Holds the list of tags associated with a photo*/
 	private ArrayList<Tag> tags;
 	
 	/**

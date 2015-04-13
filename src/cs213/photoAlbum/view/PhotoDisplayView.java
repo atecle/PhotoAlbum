@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.view;
 
 import java.awt.BorderLayout;
@@ -38,30 +43,43 @@ import cs213.photoAlbum.util.Helper;
 @SuppressWarnings("serial")
 public class PhotoDisplayView extends JFrame {
 
+	/** To replace default content pane **/
 	private JPanel contentPane, tagPane;
 
+	/**Provides a scrollable view for the list of tags*/
 	private JScrollPane tagScrollPane;
 
+	/** Table to organize the display of the tags value and corresponding type*/
 	private JTable tagTable;
 
+	/**Works with JTable to hold the names of the tags values and tag types*/
 	private DefaultTableModel tableModel;
 
+	/**JButtons for moving the slideshow forward and backwards*/
 	private JButton forwardButton, backButton;
 
+	/**Images for display of forward and back buttons*/
 	private BufferedImage forwardArrow, backArrow;
 
+	/**JLabel for the specific image and tag*/
 	private JLabel imageLabel, tagLabel;
 
+	/**Client object declaration*/
 	private Client client;
 
+	/**Holds the list of tags associated with a specific image*/
 	private ArrayList<Tag> displayedTags;
 
+	/**The variable that stores the current place within the album*/
 	private int currIndex;
 
+	/**The size of the album*/
 	private int albumSize;
 
+	/**Setting the dimension of the pictures displayed*/
 	private static final Dimension boundary = new Dimension(700, 700);
 
+	/**HashMap to store the images in a user's album*/
 	private HashMap<String, Image> images;
 
 	/**
@@ -150,13 +168,14 @@ public class PhotoDisplayView extends JFrame {
 					dm.setValueAt("", i, 1);
 				}
 
-				
+				dm.setRowCount(displayedTags.size());
+
 				for (int i = 0; i < displayedTags.size(); i++) {
-					tagTable.setValueAt(displayedTags.get(i).getTypeAsString(), i, 0);
-					tagTable.setValueAt(displayedTags.get(i).getValue(), i, 1);
+					dm.setValueAt(displayedTags.get(i).getTypeAsString(), i, 0);
+					dm.setValueAt(displayedTags.get(i).getValue(), i, 1);
 				}
 
-
+				tagTable.setModel(dm);
 				Image img = images.get(p.getName());
 
 				BufferedImage bimg = (BufferedImage)img;
@@ -185,9 +204,9 @@ public class PhotoDisplayView extends JFrame {
 				Photo p = listModel.get(currIndex);
 
 				displayedTags = p.getTags();
-				
+
 				DefaultTableModel dm = (DefaultTableModel) tagTable.getModel();
-				
+
 				int rowCount = dm.getRowCount();
 
 				for (int i = rowCount - 1; i >= 0; i--) {
@@ -196,11 +215,14 @@ public class PhotoDisplayView extends JFrame {
 				}
 
 
+				dm.setRowCount(displayedTags.size());
+
 				for (int i = 0; i < displayedTags.size(); i++) {
-					tagTable.setValueAt(displayedTags.get(i).getTypeAsString(), i, 0);
-					tagTable.setValueAt(displayedTags.get(i).getValue(), i, 1);
+					dm.setValueAt(displayedTags.get(i).getTypeAsString(), i, 0);
+					dm.setValueAt(displayedTags.get(i).getValue(), i, 1);
 				}
 
+				tagTable.setModel(dm);
 
 				Image img = images.get(p.getName());
 
@@ -257,7 +279,7 @@ public class PhotoDisplayView extends JFrame {
 
 	/**
 	 * Returns new dimension from imgSize parameter that is within display area boundary
-	 * @param imgSize
+	 * @param imgSize The width and height of the image
 	 * @return
 	 */
 	private static Dimension getScaledDimension(Dimension imgSize) {

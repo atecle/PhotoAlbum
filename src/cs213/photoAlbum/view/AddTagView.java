@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.view;
 
 import java.awt.FlowLayout;
@@ -17,23 +22,44 @@ import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.Tag;
 
+/**
+ * This class is responsible for the display and the functionality on the AddTagView window.
+ * The user can add a new tag to a selected photo, specifying the tag value and the tag type (either location,
+ * keyword or person)
+ *
+ */
+
 @SuppressWarnings("serial")
 public class AddTagView extends JFrame {
 
+	/** To replace default content pane **/
 	private JPanel contentPane;
 
+	/**JButton for creating saving an added tag*/
 	private JButton saveButton;
 
+	/**RadioButtons for location, keyword and person option for tag type*/
 	private JRadioButton locButton, keywordButton, personButton;
 
+	/**ButtonGroup to store the three tag types*/
 	private ButtonGroup group;
 	
+	/**JLabels for tag value, location, keyword and person options*/
 	private JLabel tagValueLabel, locLabel, keywordLabel, personLabel;
 
+	/**TextField for tag value input*/
 	private JTextField tagValueField;
 
+	/**Client object declaration*/
 	private Client client;
-
+	
+	
+/**
+ * Class constructor which creates the frame of the AddTagView Window
+ * 
+ * @param c Allows access to the stored data 
+ * @param photoName The name of the selected photo
+ */
 	public AddTagView(Client c, final String photoName) {
 
 		super("Add Tag");
@@ -57,7 +83,7 @@ public class AddTagView extends JFrame {
 		keywordLabel = new JLabel("Keyword:");
 		personLabel = new JLabel("Person:");
 		
-		tagValueField = new JTextField(20);
+		tagValueField = new JTextField(22);
 
 		saveButton = new JButton("Save");
 

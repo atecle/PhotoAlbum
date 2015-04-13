@@ -1,3 +1,8 @@
+/**
+ * @author Adam Tecle
+ * 
+ */
+
 package cs213.photoAlbum.view;
 
 import java.awt.FlowLayout;
@@ -19,15 +24,20 @@ import cs213.photoAlbum.control.Client;
  */
 @SuppressWarnings("serial")
 public class RecaptionView extends JFrame {
-
+	
+	/** To replace default content pane **/
 	private JPanel contentPane;
 	
+	/**Button to save recaptioned photo*/
 	private JButton saveButton;
 	
+	/**JLabel for recaptioning photo*/
 	private JLabel captionLabel;
 	
+	/**Textfield to provide recaption input*/
 	private JTextField captionField;
 	
+	/**Client object declaration*/
 	private Client client;
 	
 	/**
