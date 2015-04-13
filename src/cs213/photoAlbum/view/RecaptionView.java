@@ -17,6 +17,7 @@ import cs213.photoAlbum.control.Client;
  * The user can recaption a specific photo, specifying it with a new tag value and corresponding tag type.
  *
  */
+@SuppressWarnings("serial")
 public class RecaptionView extends JFrame {
 
 	private JPanel contentPane;

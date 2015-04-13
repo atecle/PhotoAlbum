@@ -1,14 +1,11 @@
 package cs213.photoAlbum.view;
 
-import java.awt.BorderLayout;
-
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import cs213.photoAlbum.model.Photo;
@@ -17,6 +14,7 @@ import cs213.photoAlbum.model.Photo;
  *
  */
 
+@SuppressWarnings("rawtypes")
 public class IconListCellRenderer extends JLabel implements ListCellRenderer {
 
 

@@ -21,6 +21,7 @@ import cs213.photoAlbum.model.Tag;
  * A user can delete a currently existing tag that exists under a specific photo.
  *
  */
+@SuppressWarnings("serial")
 public class RemoveTagView extends JFrame {
 
 	private JPanel contentPane, buttonPane;
@@ -65,12 +66,13 @@ public class RemoveTagView extends JFrame {
 		for (int i = 0; i < tags.size(); i++) {
 			
 			String type = null;
-			
 			switch(tags.get(i).getType()) {
 			case Tag.KEYWORD:
 				type = "Keyword";
+				break;
 			case Tag.LOCATION:
 				type = "Location";
+				break;
 			case Tag.PERSON:
 				type = "Person";
 			}

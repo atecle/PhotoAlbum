@@ -1,7 +1,7 @@
 package cs213.photoAlbum.view;
 
 import java.awt.BorderLayout;
-
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -10,10 +10,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.Tag;
+import cs213.photoAlbum.util.Helper;
 
 /**
  *  This class is responsible for the display and the functionality on the PhotoDisplayView window. 
@@ -34,11 +35,12 @@ import cs213.photoAlbum.model.Tag;
  *
  */
 
+@SuppressWarnings("serial")
 public class PhotoDisplayView extends JFrame {
 
 	private JPanel contentPane, tagPane;
 
-	private JScrollPane photoScrollPane, tagScrollPane;
+	private JScrollPane tagScrollPane;
 
 	private JTable tagTable;
 
@@ -58,6 +60,10 @@ public class PhotoDisplayView extends JFrame {
 
 	private int albumSize;
 
+	private static final Dimension boundary = new Dimension(700, 700);
+
+	private HashMap<String, Image> images;
+
 	/**
 	 * Class constructor which creates the frame of the PhotoDisplayView Window
 	 * 
@@ -66,12 +72,13 @@ public class PhotoDisplayView extends JFrame {
 	 * @param photoName The name of the photo
 	 */
 
-	public PhotoDisplayView(Client c, final DefaultListModel<Photo> listModel, final String photoName) {
+	public PhotoDisplayView(Client c, final DefaultListModel<Photo> listModel, final String photoName, String albumName) {
 
-		super(photoName);
-		setSize(800, 600);
+		super(c.getPhoto(photoName).getCaption() + " : " + Helper.formatDate(c.getPhoto(photoName).getDate().getTime()));
+		setSize(800, 650);
 
 		this.client = c;
+		images = new HashMap<String, Image>();
 
 		contentPane = new JPanel(new BorderLayout());
 		tagPane = new JPanel(new FlowLayout());
@@ -79,6 +86,7 @@ public class PhotoDisplayView extends JFrame {
 
 		this.albumSize = listModel.size();
 
+		//finding the index of the current photo in the listModel
 		for (int i = 0; i < albumSize; i++) {
 			Photo p = listModel.get(i);
 			if (p.getName().compareTo(photoName) == 0) {
@@ -132,15 +140,35 @@ public class PhotoDisplayView extends JFrame {
 
 				Photo p = listModel.get(currIndex);
 
-				try {
-					imageLabel.setIcon(new ImageIcon(ImageIO.read(client.getPhoto(p.getName()).getFile())));
-				} catch (IOException e1) {
-					System.err.println("IOException " + e1.getMessage());
+				displayedTags = p.getTags();
+
+				DefaultTableModel dm = (DefaultTableModel) tagTable.getModel();
+				int rowCount = dm.getRowCount();
+
+				for (int i = rowCount - 1; i >= 0; i--) {
+					dm.setValueAt("", i, 0);
+					dm.setValueAt("", i, 1);
 				}
 
-				/*	imageLabel.setIcon(img);
-				scrollPane = new JScrollPane(imageLabel);
-				contentPane.add(scrollPane, BorderLayout.CENTER);*/
+				
+				for (int i = 0; i < displayedTags.size(); i++) {
+					tagTable.setValueAt(displayedTags.get(i).getTypeAsString(), i, 0);
+					tagTable.setValueAt(displayedTags.get(i).getValue(), i, 1);
+				}
+
+
+				Image img = images.get(p.getName());
+
+				BufferedImage bimg = (BufferedImage)img;
+
+				Dimension newDimension = getScaledDimension(new Dimension(bimg.getWidth(), bimg.getHeight()));
+
+				img = img.getScaledInstance((int)newDimension.getWidth(), (int)newDimension.getHeight(), 
+						Image.SCALE_SMOOTH);
+
+				imageLabel.setIcon(new ImageIcon(img));
+
+				setTitle(p.getCaption() + " : " + Helper.formatDate(p.getDate().getTime()));
 
 				repaint();
 			}
@@ -154,46 +182,111 @@ public class PhotoDisplayView extends JFrame {
 
 				if (currIndex == -1) currIndex = albumSize - 1;
 
-
-
 				Photo p = listModel.get(currIndex);
-				try {
-					imageLabel.setIcon(new ImageIcon(ImageIO.read(client.getPhoto(p.getName()).getFile())));
-				} catch (IOException e1) {
-					System.err.println("IOException " + e1.getMessage());
+
+				displayedTags = p.getTags();
+				
+				DefaultTableModel dm = (DefaultTableModel) tagTable.getModel();
+				
+				int rowCount = dm.getRowCount();
+
+				for (int i = rowCount - 1; i >= 0; i--) {
+					dm.setValueAt("", i, 0);
+					dm.setValueAt("", i, 1);
 				}
 
+
+				for (int i = 0; i < displayedTags.size(); i++) {
+					tagTable.setValueAt(displayedTags.get(i).getTypeAsString(), i, 0);
+					tagTable.setValueAt(displayedTags.get(i).getValue(), i, 1);
+				}
+
+
+				Image img = images.get(p.getName());
+
+				BufferedImage bimg = (BufferedImage)img;
+
+				Dimension newDimension = getScaledDimension(new Dimension(bimg.getWidth(), bimg.getHeight()));
+				img = img.getScaledInstance((int)newDimension.getWidth(), (int)newDimension.getHeight(), 
+						Image.SCALE_SMOOTH);
+
+				imageLabel.setIcon(new ImageIcon(img));
+
+				setTitle(p.getCaption() + " : " + Helper.formatDate(p.getDate().getTime()));
 				repaint();
 
 			}
 		});
 
-		ImageIcon img = null;
+		//loading img objects into a hashtable to limit time spent doing disk IO
+		for (Photo photo : client.getUser().getAlbum(albumName).getPhotos()) {
+			Image img = null;
 
-		try {
-			img = new ImageIcon(ImageIO.read(client.getPhoto(photoName).getFile()));
-		} catch (IOException e) {
-			System.err.println("IOException " + e.getMessage());
+			try {
+				img = ImageIO.read(photo.getFile());
+			} catch (IOException ex) {
+				System.err.println("IOException while loading image hashmap. " + ex.getMessage());
+			}
+			images.put(photo.getName(), img);
 		}
 
-		imageLabel = new JLabel("", img, JLabel.CENTER);
+		Image img = images.get(photoName);
+
+		BufferedImage bimg = (BufferedImage)img;
+
+		Dimension newDimension = getScaledDimension(new Dimension(bimg.getWidth(), bimg.getHeight()));
+		img = img.getScaledInstance((int)newDimension.getWidth(), (int)newDimension.getHeight(), 
+				Image.SCALE_SMOOTH);
+
+		imageLabel = new JLabel("", new ImageIcon(img), JLabel.CENTER);
 		tagLabel = new JLabel("Tags:");
-		//photoScrollPane = new JScrollPane(imageLabel);
 		contentPane.add(imageLabel, BorderLayout.CENTER);
 		contentPane.add(backButton, BorderLayout.WEST);
 		contentPane.add(forwardButton, BorderLayout.EAST);
 
-		tagPane = new JPanel(new FlowLayout());
+		tagPane = new JPanel(new BorderLayout());
+		tagScrollPane.setPreferredSize(new Dimension(100, 100));
 
-		tagPane.add(tagLabel);
-		tagPane.add(tagTable);
+		tagPane.add(tagLabel, BorderLayout.PAGE_START);
+		tagPane.add(tagScrollPane, BorderLayout.CENTER);
 		contentPane.add(tagPane, BorderLayout.PAGE_END);
 		setContentPane(contentPane);
 
 
 	}
 
+	/**
+	 * Returns new dimension from imgSize parameter that is within display area boundary
+	 * @param imgSize
+	 * @return
+	 */
+	private static Dimension getScaledDimension(Dimension imgSize) {
 
+		int original_width = imgSize.width;
+		int original_height = imgSize.height;
+		int bound_width = boundary.width;
+		int bound_height = boundary.height;
+		int new_width = original_width;
+		int new_height = original_height;
+
+		// first check if we need to scale width
+		if (original_width > bound_width) {
+			//scale width to fit
+			new_width = bound_width;
+			//scale height to maintain aspect ratio
+			new_height = (new_width * original_height) / original_width;
+		}
+
+		// then check if we need to scale even with the new height
+		if (new_height > bound_height) {
+			//scale height to fit instead
+			new_height = bound_height;
+			//scale width to maintain aspect ratio
+			new_width = (new_height * original_width) / original_height;
+		}
+
+		return new Dimension(new_width, new_height);
+	}
 
 
 }

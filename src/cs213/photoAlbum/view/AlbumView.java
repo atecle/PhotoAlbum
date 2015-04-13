@@ -32,12 +32,13 @@ import cs213.photoAlbum.model.Photo;
  * available.
  *
  */
+@SuppressWarnings("serial")
 public class AlbumView extends JFrame {
 
 	private JPanel contentPane, buttonPanel;
 
-	private JButton addButton, removeButton, 
-	recaptionButton, openButton, 
+	private JButton addButton, removeButton,
+	moveButton, recaptionButton, openButton, 
 	addTagButton, removeTagButton;
 
 	private JScrollPane scrollPane;
@@ -49,7 +50,7 @@ public class AlbumView extends JFrame {
 	private PhotoDisplayView photoView;
 
 	private Client client;
-	
+
 	/**
 	 * Class constructor which creates the frame of the AdminView Window
 	 * 
@@ -57,6 +58,7 @@ public class AlbumView extends JFrame {
 	 * @param albumName The name of the album
 	 */
 
+	@SuppressWarnings("unchecked")
 	public AlbumView(Client c, final String albumName) {
 
 		super(c.getUser() +  "'s " + albumName);
@@ -137,11 +139,26 @@ public class AlbumView extends JFrame {
 
 				if (p == null) return;
 
-				System.out.println(listModel.removeElement(p));
-				System.out.println(p.removeFromAlbum(albumName));
+				listModel.removeElement(p);
+				p.removeFromAlbum(albumName);
 				client.getUser().deletePhoto(p.getName());
 				client.getUser().getAlbum(albumName).deletePhoto(p.getName());
 				//client.writeUsers();
+
+			}
+		});
+		
+		moveButton = new JButton("Move");
+		
+		moveButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				Photo p = photoList.getSelectedValue();
+				
+				if (p == null) return;
+				
 				
 			}
 		});
@@ -178,23 +195,23 @@ public class AlbumView extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				final Photo p = photoList.getSelectedValue();
-				
+
 				if (p == null) return;
 
 				AddTagView addTagView = new AddTagView(client, p.getName());
 				addTagView.setLocationRelativeTo(null);
 				addTagView.setVisible(true);
-				
+
 				addTagView.addWindowListener(new WindowAdapter() {
-					
+
 					public void windowClosing(WindowEvent e) {
-						
+
 						//client.writeUsers();
-						
+
 					}
-					
+
 				});
 			}
 		});
@@ -205,24 +222,24 @@ public class AlbumView extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				Photo p = photoList.getSelectedValue();
-				
+
 				if (p == null) return;
-				
+
 				RemoveTagView rmTagView = new RemoveTagView(client, p.getName());
-				
+
 				rmTagView.setLocationRelativeTo(null);
 				rmTagView.setVisible(true);
-				
+
 				rmTagView.addWindowListener(new WindowAdapter() {
-					
+
 					public void windowClosing(WindowEvent e) {
-						
+
 						//client.writeUsers();
 					}
 				});
-				
+
 			}
 		});
 
@@ -234,21 +251,21 @@ public class AlbumView extends JFrame {
 
 				Photo p = photoList.getSelectedValue();
 				if (p == null) return;
-				
-				final PhotoDisplayView photoView = new PhotoDisplayView(client, listModel, p.getName());
-				
+
+				photoView = new PhotoDisplayView(client, listModel, p.getName(), albumName);
+
 				photoView.setLocationRelativeTo(null);
 				photoView.setVisible(true);
 				setVisible(false);
 				photoView.addWindowListener(new WindowAdapter() {
-					
+
 					public void windowClosing(WindowEvent e) {
-						
+
 						setVisible(true);
 					}
 				});
-				
-				
+
+
 			}
 		});
 
@@ -269,7 +286,7 @@ public class AlbumView extends JFrame {
 		setContentPane(contentPane);
 
 	}
-	
+
 	/**
 	 * Checks if a file is an image file
 	 * 

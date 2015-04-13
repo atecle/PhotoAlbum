@@ -42,9 +42,6 @@ public class CreateOrRenameAlbumView extends JFrame {
 	private DefaultTableModel listModel;
 
 	
-	private boolean add; //not used 
-	private String albumName; //not used
-	
 	/**
 	 * Class constructor which creates the frame of the CreateOrRenameAlbumView Window
 	 * 

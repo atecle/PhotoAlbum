@@ -1,9 +1,7 @@
 package cs213.photoAlbum.control;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import cs213.photoAlbum.model.Album;
 import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.User;

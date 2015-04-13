@@ -111,7 +111,19 @@ public class CollectionView extends JFrame {
 		searchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				SearchView searchView = new SearchView(client, listModel);
+				setVisible(false);
+				searchView.setLocationRelativeTo(null);
+				searchView.setVisible(true);
+			
+				
+				searchView.addWindowListener(new WindowAdapter() {
 
+					public void windowClosing(WindowEvent e) {
+
+						setVisible(true);
+					}
+				});
 
 			}
 		});

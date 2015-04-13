@@ -17,6 +17,7 @@ import cs213.photoAlbum.control.Client;
 import cs213.photoAlbum.model.Photo;
 import cs213.photoAlbum.model.Tag;
 
+@SuppressWarnings("serial")
 public class AddTagView extends JFrame {
 
 	private JPanel contentPane;
